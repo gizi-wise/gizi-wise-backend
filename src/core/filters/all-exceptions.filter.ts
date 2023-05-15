@@ -25,15 +25,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getResponse()
         : {
-            error: 'Internal Server Error',
-            message: exception,
+            statusCode: httpStatus,
+            message: exception ?? [],
             data: {},
           };
-    if (typeof responseBody === 'object' && 'statusCode' in responseBody) {
-      delete responseBody.statusCode;
-      responseBody.error = responseBody.error ?? responseBody.message[0];
-      responseBody.data = {};
-    }
+    delete responseBody.error;
+    responseBody.data = {};
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
   }

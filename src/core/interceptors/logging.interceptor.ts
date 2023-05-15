@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   CallHandler,
   Logger,
+  HttpStatus,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -23,7 +24,7 @@ export class LoggingInterceptor implements NestInterceptor {
         );
       }),
       catchError((err) => {
-        const status = err.status;
+        const status = err.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
         const errorMessage = err.response?.message;
         if (status < 500) {
           this.logger.warn(`${messageLog} - ${status} - ${Date.now() - now}ms`);
