@@ -24,7 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
-    "@nestjs/platform-express": "^9.0.0",
+    "hyper-express": "^6.5.9",
     "joi": "^17.9.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
@@ -33,7 +33,6 @@
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
-    "@types/express": "^4.17.13",
     "@types/jest": "29.5.0",
     "@types/node": "18.15.11",
     "@types/supertest": "^2.0.11",
