@@ -5,27 +5,37 @@ import {
   ExceptionFilter,
   HttpStatus,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    private configService: ConfigService,
+  ) {}
 
   catch(exception: any, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
+    const error =
+      ctx.getResponse() instanceof HttpException
+        ? ctx.getResponse()
+        : exception;
+
+    const response =
+      ctx.getResponse() instanceof HttpException
+        ? ctx.getRequest()
+        : ctx.getResponse();
+
     const httpStatus =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : ctx.getResponse() instanceof HttpException
-        ? ctx.getResponse().getStatus()
+      error instanceof HttpException
+        ? error.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const responseBody: any =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : ctx.getResponse() instanceof HttpException
-        ? ctx.getResponse().response
+      error instanceof HttpException
+        ? error.getResponse()
         : { statusCode: httpStatus, message: exception.message, data: {} };
 
     delete responseBody.error;
@@ -33,12 +43,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     responseBody.message = Array.isArray(responseBody.message)
       ? responseBody.message
       : [responseBody.message];
-
-    const response =
-      ctx.getResponse() instanceof HttpException
-        ? ctx.getRequest()
-        : ctx.getResponse();
-
+    if (this.configService.get('NODE_ENV') === 'development') {
+      console.error(error);
+    }
     httpAdapter.reply(response, responseBody, httpStatus);
   }
 }

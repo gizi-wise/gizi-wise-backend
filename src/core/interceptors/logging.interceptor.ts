@@ -6,13 +6,11 @@ import {
   Logger,
   HttpStatus,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
-  constructor(private configService: ConfigService) {}
   private readonly logger = new Logger('HTTP');
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const { url, method } = context.switchToHttp().getRequest();
@@ -31,9 +29,6 @@ export class LoggingInterceptor implements NestInterceptor {
         if (status < 500) {
           this.logger.warn(`${messageLog} - ${status} - ${Date.now() - now}ms`);
         } else {
-          if (this.configService.get('NODE_ENV') === 'development') {
-            console.error(err);
-          }
           this.logger.error(
             `${messageLog} - ${status} - ${Date.now() - now}ms`,
           );
