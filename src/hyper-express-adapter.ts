@@ -8,6 +8,7 @@
  */
 import {
   InternalServerErrorException,
+  NotFoundException,
   RequestMethod,
   StreamableFile,
   VersioningType,
@@ -255,8 +256,8 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
   ): VersionedRoute {
     const callNextHandler: VersionedRoute = (req, res, next) => {
       if (!next) {
-        throw new InternalServerErrorException(
-          'HTTP adapter does not support filtering on version',
+        throw new NotFoundException(
+          'The requested version does not exist in this route!',
         );
       }
       return next();
