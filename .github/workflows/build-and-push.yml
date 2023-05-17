@@ -46,6 +46,11 @@ jobs:
         with:
           version: '>= 363.0.0'
           project_id: ${{ secrets.PROJECT_ID }}
+      - name: Update gcloud components
+        run: gcloud components update
+      - name: Configure Docker
+        run: |-
+          gcloud auth configure-docker "$GAR_LOCATION-docker.pkg.dev"
       - name: 'Docker build'
         run: |-
           docker build \
