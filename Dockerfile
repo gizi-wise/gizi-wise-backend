@@ -62,4 +62,4 @@ COPY --chown=node:node --from=build /usr/src/app/dist ./dist
 EXPOSE 3000
 
 # Start the server using the production build
-CMD ["pm2-runtime", "."]
+CMD ["pm2-runtime", "dist/main.js"]
