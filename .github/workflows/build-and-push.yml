@@ -50,12 +50,14 @@ jobs:
         run: gcloud components update
       - name: Configure Docker
         run: |-
-          gcloud auth configure-docker "$GAR_LOCATION-docker.pkg.dev"
+          gcloud auth configure-docker "$GAR_LOCATION-docker.pkg.dev" --quiet
       - name: 'Docker build'
         run: |-
           docker build \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
-
+      - name: 'Docker tag'
+        run: |-
+          docker tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
       - name: Push Docker image to Google Cloud
         run: |
           docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA"
