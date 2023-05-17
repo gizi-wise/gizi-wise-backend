@@ -1,0 +1,9 @@
+.husky
+.github
+.dockerignore
+.env.example
+.gitignore
+dist
+node_modules
+npm-debug.log
+yarn-error.log
