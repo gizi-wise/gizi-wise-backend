@@ -13,7 +13,7 @@ export class ResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((responseData) => ({
         statusCode: context.switchToHttp().getResponse().statusCode,
-        message: typeof responseData === 'string' ? [responseData] : [],
+        messages: typeof responseData === 'string' ? [responseData] : [],
         data: typeof responseData === 'string' ? {} : responseData,
       })),
     );

@@ -39,10 +39,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : { statusCode: httpStatus, message: exception.message, data: {} };
 
     delete responseBody.error;
-    responseBody.data = {};
-    responseBody.message = Array.isArray(responseBody.message)
+    responseBody.messages = Array.isArray(responseBody.message)
       ? responseBody.message
       : [responseBody.message];
+    delete responseBody.message;
+    responseBody.data = {};
     if (this.configService.get('NODE_ENV') === 'development') {
       console.error(error);
     }
