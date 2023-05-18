@@ -63,4 +63,4 @@ jobs:
           docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
       - name: Replace all vms in instance group
         run: |
-          gcloud beta compute instance-groups managed rolling-action replace ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --max-surge=1 --max-unavailable=1 --min-ready=90 --replacement-method='substitute' --region=$GAR_LOCATION --zone=asia-southeast1-b --quiet
+          gcloud beta compute instance-groups managed rolling-action replace ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --max-surge=1 --max-unavailable=1 --min-ready=90 --replacement-method='substitute' --zone=asia-southeast1-b --quiet
