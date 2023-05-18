@@ -27,7 +27,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
       # - name: Set up Node.js
       #   uses: actions/setup-node@v3
       #   with:
@@ -35,12 +34,10 @@ jobs:
 
       # - name: Install dependencies
       #   run: npm ci
-
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.1.1
         with:
           credentials_json: ${{ secrets.GCLOUD_AUTH }}
-
       - name: Set up gcloud Cloud SDK environment
         uses: google-github-actions/setup-gcloud@v1.1.1
         with:
@@ -66,4 +63,4 @@ jobs:
           docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
       - name: Replace all vms in instance group
         run: |
-          gcloud beta compute instance-groups managed rolling-action start-update ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --type='proactive' --max-surge=1 --max-unavailable=1 --min-ready=90 --minimal-action='replace' --most-disruptive-allowed-action='' --replacement-method='substitute' --version=template=https://www.googleapis.com/compute/beta/projects/${{ secrets.IMAGE_NAME }}/global/instanceTemplates/${{ secrets.IMAGE_NAME }}-20230518 --zone=asia-southeast1-b
+          gcloud beta compute instance-groups managed rolling-action replace ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --max-surge=1 --max-unavailable=1 --min-ready=90 --replacement-method='substitute' --region=$GAR_LOCATION --zone=asia-southeast1-b --quiet
