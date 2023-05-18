@@ -46,6 +46,8 @@ jobs:
         with:
           version: '>= 363.0.0'
           project_id: ${{ secrets.PROJECT_ID }}
+      - name: Install gcloud beta
+        run: gcloud components install beta --quiet
       - name: Update gcloud components
         run: gcloud components update
       - name: Configure Docker
