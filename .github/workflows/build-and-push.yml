@@ -28,17 +28,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      # - name: Set up Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
+      # - name: Install dependencies
+      #   run: npm ci
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.1.1
-        with: 
+        with:
           credentials_json: ${{ secrets.GCLOUD_AUTH }}
 
       - name: Set up gcloud Cloud SDK environment
@@ -64,6 +64,6 @@ jobs:
         run: |
           docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA"
           docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
-      - name: Update instance group
+      - name: Replace all vms in instance group
         run: |
-          gcloud beta compute instance-groups managed rolling-action start-update ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --type='proactive' --max-surge=1 --max-unavailable=1 --min-ready=90 --minimal-action='replace' --most-disruptive-allowed-action='replace' --replacement-method='substitute' --version=template=projects/${{ secrets.IMAGE_NAME }}/global/instanceTemplates/${{ secrets.IMAGE_NAME }}-20230518 --zone=asia-southeast1-b --quiet
+          gcloud beta compute instance-groups managed rolling-action start-update ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --type='proactive' --max-surge=1 --max-unavailable=1 --min-ready=90 --minimal-action='replace' --most-disruptive-allowed-action='' --replacement-method='substitute' --version=template=https://www.googleapis.com/compute/beta/projects/${{ secrets.IMAGE_NAME }}/global/instanceTemplates/${{ secrets.IMAGE_NAME }}-20230518 --zone=asia-southeast1-b
