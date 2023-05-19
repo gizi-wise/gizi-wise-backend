@@ -1,6 +1,3 @@
-# ARGUMENTS
-ARG TZ=UTC
-
 ###################
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
@@ -55,6 +52,9 @@ USER node
 ###################
 
 FROM node:hydrogen-slim As production
+
+# ARGUMENTS
+ARG TZ=UTC
 
 ENV TZ ${TZ}
 
