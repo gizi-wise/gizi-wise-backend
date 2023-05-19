@@ -44,7 +44,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       : [responseBody.message];
     delete responseBody.message;
     responseBody.data = {};
-    if (this.configService.get('NODE_ENV') === 'development') {
+    if (
+      httpStatus >= HttpStatus.INTERNAL_SERVER_ERROR ||
+      this.configService.get('NODE_ENV') === 'development'
+    ) {
       console.error(error);
     }
     httpAdapter.reply(response, responseBody, httpStatus);
