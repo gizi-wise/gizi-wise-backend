@@ -1,3 +1,6 @@
+# ARGUMENTS
+ARG TZ=UTC
+
 ###################
 # BUILD FOR LOCAL DEVELOPMENT
 ###################
@@ -52,6 +55,8 @@ USER node
 ###################
 
 FROM node:hydrogen-slim As production
+
+ENV TZ ${TZ}
 
 RUN npm install pm2 -g
 

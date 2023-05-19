@@ -53,6 +53,7 @@ jobs:
       - name: 'Docker build'
         run: |-
           docker build \
+          --build-arg="TZ=Asia/Jakarta" \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-
