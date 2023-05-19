@@ -7,8 +7,7 @@
  * Credits: https://github.com/SirReiva/nestjs-adapters
  */
 import {
-  InternalServerErrorException,
-  NotFoundException,
+  HttpVersionNotSupportedException,
   RequestMethod,
   StreamableFile,
   VersioningType,
@@ -256,7 +255,7 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
   ): VersionedRoute {
     const callNextHandler: VersionedRoute = (req, res, next) => {
       if (!next) {
-        throw new NotFoundException(
+        throw new HttpVersionNotSupportedException(
           'The requested version does not exist in this route!',
         );
       }
