@@ -23,7 +23,7 @@ jobs:
     needs: pre_job
     if: needs.pre_job.outputs.should_skip != 'true'
     runs-on: ubuntu-latest
-
+    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -54,6 +54,11 @@ jobs:
         run: |-
           docker build \
           --build-arg="TZ=Asia/Jakarta" \
+          --build-arg="DB_HOST=${{ secrets.DB_HOST }}" \
+          --build-arg="DB_PORT=${{ secrets.DB_PORT }}" \
+          --build-arg="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
+          --build-arg="DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
+          --build-arg="DB_DATABASE=${{ secrets.DB_DATABASE }}" \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-
