@@ -12,7 +12,8 @@
     "baseUrl": "./src",
     "paths": {
       "@config/*": ["./config/*"],
-      "@core/*": ["./core/*"]
+      "@core/*": ["./core/*"],
+      "@gizi-wise/*": ["./gizi-wise/*"]
     },
     "incremental": true,
     "skipLibCheck": true,

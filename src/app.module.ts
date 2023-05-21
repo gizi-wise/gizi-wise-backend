@@ -6,6 +6,7 @@ import { CoreModule } from './core/core.module';
 import envConfig from '@config/env/env.config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { getDatabaseConfig } from '@config/database/db.config';
+import { GiziWiseModule } from '@gizi-wise/gizi-wise.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { getDatabaseConfig } from '@config/database/db.config';
     SequelizeModule.forRootAsync({
       useFactory: getDatabaseConfig,
     }),
+    GiziWiseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
