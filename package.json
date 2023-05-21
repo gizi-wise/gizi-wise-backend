@@ -26,6 +26,7 @@
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/sequelize": "^9.0.2",
+    "helmet": "^7.0.0",
     "husky": "^8.0.3",
     "hyper-express": "^6.5.9",
     "joi": "^17.9.2",
