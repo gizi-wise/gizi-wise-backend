@@ -1,4 +1,9 @@
-import { Logger, VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
+import {
+  Logger,
+  ValidationPipe,
+  VersioningType,
+  VERSION_NEUTRAL,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -26,6 +31,12 @@ async function bootstrap() {
   if (nodeEnv === 'production') {
     app.use(helmet());
   }
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
+  );
   const port = configService.get('PORT');
   await app.listen(port, '0.0.0.0');
   Logger.log(`Server running on port ${port}`, 'Bootstrap');
