@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { CoreModule } from './core/core.module';
 import envConfig from '@config/env/env.config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { getDatabaseConfig } from '@config/env/database/db.config';
+import { getDatabaseConfig } from '@config/database/db.config';
 
 @Module({
   imports: [
