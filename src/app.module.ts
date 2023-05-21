@@ -7,6 +7,7 @@ import envConfig from '@config/env/env.config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { getDatabaseConfig } from '@config/database/db.config';
 import { GiziWiseModule } from '@gizi-wise/gizi-wise.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GiziWiseModule } from '@gizi-wise/gizi-wise.module';
       useFactory: getDatabaseConfig,
     }),
     GiziWiseModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

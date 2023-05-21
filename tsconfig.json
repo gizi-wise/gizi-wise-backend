@@ -11,6 +11,7 @@
     "outDir": "./dist",
     "baseUrl": "./src",
     "paths": {
+      "@common/*": ["./common/*"],
       "@config/*": ["./config/*"],
       "@core/*": ["./core/*"],
       "@gizi-wise/*": ["./gizi-wise/*"]
