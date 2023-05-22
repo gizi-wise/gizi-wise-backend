@@ -10,6 +10,7 @@ import { AppModule } from './app.module';
 import { HyperExpressAdapter } from './hyper-express-adapter';
 import * as cors from 'cors';
 import helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const now = Date.now();
@@ -32,6 +33,14 @@ async function bootstrap() {
   if (nodeEnv === 'production') {
     app.use(helmet());
   }
+  const config = new DocumentBuilder()
+    .setTitle('Gizi Wise API')
+    .setDescription('Gizi Wise API Documentation')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
