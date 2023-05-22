@@ -12,6 +12,7 @@ import * as cors from 'cors';
 import helmet from 'helmet';
 
 async function bootstrap() {
+  const now = Date.now();
   const app = await NestFactory.create(AppModule, new HyperExpressAdapter());
   app.enableVersioning({
     type: VersioningType.HEADER,
@@ -39,6 +40,9 @@ async function bootstrap() {
   );
   const port = configService.get('PORT');
   await app.listen(port, '0.0.0.0');
-  Logger.log(`Server running on port ${port}`, 'Bootstrap');
+  Logger.log(
+    `Server running on port ${port}, initialize time: ${Date.now() - now}ms`,
+    'Bootstrap',
+  );
 }
 bootstrap();
