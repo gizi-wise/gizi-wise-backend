@@ -11,6 +11,10 @@ import {
   paranoid: true,
   indexes: [
     {
+      fields: ['username'],
+      unique: true,
+    },
+    {
       fields: ['email'],
       unique: true,
     },
@@ -20,6 +24,9 @@ export class Admin extends Model {
   @PrimaryKey
   @Column(DataType.UUIDV4)
   id: string;
+
+  @Column
+  username: string;
 
   @Column
   name: string;

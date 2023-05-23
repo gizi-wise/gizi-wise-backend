@@ -19,6 +19,10 @@ export class AdminDto {
   name: string;
 
   @IsNotEmpty()
+  @IsString()
+  username: string;
+
+  @IsNotEmpty()
   @IsEmail()
   email: string;
 

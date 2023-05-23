@@ -6,6 +6,14 @@ import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class CreateAdminDto {
   @ApiProperty({
     type: 'string',
+    example: 'admin',
+  })
+  @IsNotEmpty()
+  @IsString()
+  username: string;
+
+  @ApiProperty({
+    type: 'string',
     example: 'John Doe',
   })
   @IsNotEmpty()

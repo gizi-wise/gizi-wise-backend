@@ -9,6 +9,11 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.UUIDV4,
       },
+      username: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+        unique: true,
+      },
       email: {
         type: Sequelize.STRING(100),
         allowNull: false,
@@ -41,7 +46,7 @@ module.exports = {
       deletedAt: Sequelize.DATE,
     });
     // indexes for faster search: email
-    await queryInterface.addIndex('admins', ['email']);
+    await queryInterface.addIndex('admins', ['username', 'email']);
   },
 
   async down(queryInterface, Sequelize) {

@@ -11,12 +11,10 @@ export class AdminAuthService {
     private hashService: HashService,
   ) {}
 
-  async validateAdmin(email: string, pass: string) {
+  async validateAdmin(username: string, pass: string) {
     try {
-      const { password, ...result } = await this.adminService.findOneByEmail(
-        email,
-        true,
-      );
+      const { password, ...result } =
+        await this.adminService.findOneByEmailOrUsername(username, true);
       const isPasswordMatching = await this.hashService.compare(pass, password);
       if (!isPasswordMatching) {
         throw new BadRequestException('Wrong password');
@@ -28,8 +26,14 @@ export class AdminAuthService {
   }
 
   async login(admin: any) {
-    const payload = { email: admin.email, sub: admin.id };
+    const payload = {
+      role: admin.role,
+      username: admin.username,
+      email: admin.email,
+      id: admin.id,
+    };
     return {
+      id: admin.id,
       role: admin.role,
       access_token: this.jwtService.sign(payload),
     };

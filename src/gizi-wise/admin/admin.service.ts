@@ -38,9 +38,27 @@ export class AdminService {
     }
   }
 
+  private async checkUsernameIsUsed(username: string, id?: string) {
+    try {
+      const where = {
+        username,
+      };
+      if (id) {
+        where['id'] = { [Op.ne]: id };
+      }
+      const admin = await this.adminModel.findOne({ where });
+      if (admin) {
+        throw new BadRequestException('Username is already used.');
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async create(createAdminDto: CreateAdminDto): Promise<AdminDto> {
     try {
       const {
+        username,
         email,
         password,
         role = AdminRole.ADMIN,
@@ -49,11 +67,13 @@ export class AdminService {
       } = createAdminDto;
 
       await this.checkEmailIsUsed(email);
+      await this.checkUsernameIsUsed(username);
 
       const hashedPassword = await this.hashService.hash(password);
 
       const admin = await this.adminModel.create({
         id: this.uuidService.genUUIDV4(),
+        username,
         email,
         password: hashedPassword,
         role,
@@ -90,9 +110,13 @@ export class AdminService {
     }
   }
 
-  async findOneByEmail(email: string, withPassword = false) {
+  async findOneByEmailOrUsername(keyword: string, withPassword = false) {
     try {
-      const admin = await this.adminModel.findOne({ where: { email } });
+      const admin = await this.adminModel.findOne({
+        where: {
+          [Op.or]: [{ email: keyword }, { username: keyword }],
+        },
+      });
       if (!admin) {
         throw new NotFoundException('Admin not found.');
       }
@@ -105,9 +129,12 @@ export class AdminService {
   async update(id: string, updateAdminDto: UpdateAdminDto) {
     try {
       await this.findOne(id);
-      const { email, password } = updateAdminDto;
+      const { username, email, password } = updateAdminDto;
       if (email) {
         await this.checkEmailIsUsed(email, id);
+      }
+      if (username) {
+        await this.checkUsernameIsUsed(username, id);
       }
       if (password) {
         updateAdminDto.password = await this.hashService.hash(password);
