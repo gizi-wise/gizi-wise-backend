@@ -26,16 +26,10 @@ export class AdminAuthService {
   }
 
   async login(admin: any) {
-    const payload = {
-      role: admin.role,
-      username: admin.username,
-      email: admin.email,
-      id: admin.id,
-    };
     return {
       id: admin.id,
       role: admin.role,
-      access_token: this.jwtService.sign(payload),
+      access_token: this.jwtService.sign(admin),
     };
   }
 }

@@ -43,7 +43,7 @@ export class AdminDto {
   isActive: boolean;
 
   constructor(data: Admin, omit: string[] = []) {
-    Object.assign(this, data.toJSON());
+    Object.assign(this, data instanceof Admin ? data.toJSON() : data);
     const errors = validateSync(this, {
       validationError: { target: true },
       whitelist: true,

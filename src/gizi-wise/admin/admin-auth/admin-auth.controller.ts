@@ -1,7 +1,8 @@
-import { Controller, UseGuards, Post, Request } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Controller, UseGuards, Post, Get, Request } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AdminAuthLoginDto } from './admin-auth.dto';
 import { AdminAuthService } from './admin-auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { LocalAuthGuard } from './local-auth.guard';
 
 @ApiTags('Admins')
@@ -16,5 +17,12 @@ export class AdminAuthController {
   @Post('login')
   async login(@Request() req: any) {
     return this.authService.login(req.user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile')
+  @ApiBearerAuth()
+  getProfile(@Request() req: any) {
+    return req.user;
   }
 }
