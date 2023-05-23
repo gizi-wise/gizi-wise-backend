@@ -59,6 +59,8 @@ jobs:
           --build-arg="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
           --build-arg="DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
           --build-arg="DB_DATABASE=${{ secrets.DB_DATABASE }}" \
+          --build-arg="JWT_SECRET=${{ secrets.JWT_SECRET }}" \
+          --build-arg="JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }}" \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-
