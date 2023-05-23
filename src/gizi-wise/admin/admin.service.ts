@@ -90,6 +90,18 @@ export class AdminService {
     }
   }
 
+  async findOneByEmail(email: string, withPassword = false) {
+    try {
+      const admin = await this.adminModel.findOne({ where: { email } });
+      if (!admin) {
+        throw new NotFoundException('Admin not found.');
+      }
+      return new AdminDto(admin, withPassword ? [] : ['password']);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async update(id: string, updateAdminDto: UpdateAdminDto) {
     try {
       await this.findOne(id);
