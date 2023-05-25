@@ -6,9 +6,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
+import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin, AdminRole } from './entities/admin.entity';
 
@@ -86,11 +87,32 @@ export class AdminService {
     }
   }
 
-  async findAll() {
+  async findAll(queryListAdminDto: QueryListAdminDto) {
     try {
-      const { rows, count } = await this.adminModel.findAndCountAll();
+      const { limit, offset, isActive, name, role } = queryListAdminDto;
+      const whereOptions: WhereOptions = {};
+      if (typeof isActive === 'boolean') {
+        whereOptions['isActive'] = isActive;
+      }
+      if (name) {
+        whereOptions['name'] = {
+          [Op.iLike]: `%${name}%`,
+        };
+      }
+      if (role) {
+        whereOptions['role'] = role;
+      }
+      const { rows, count } = await this.adminModel.findAndCountAll({
+        where: whereOptions,
+        attributes: {
+          exclude: ['createdAt', 'deletedAt', 'updatedAt', 'password'],
+        },
+        limit,
+        offset,
+        distinct: true,
+      });
       return {
-        admins: rows.map((admin) => new AdminDto(admin, ['password'])),
+        admins: rows.map((admin) => new AdminDto(admin)),
         count,
       };
     } catch (error) {

@@ -1,3 +1,4 @@
+import { LoggedUser } from '@common/decorators/logged-user.decorator';
 import {
   Controller,
   Get,
@@ -7,12 +8,17 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from './admin-auth/jwt-auth.guard';
 import { AdminService } from './admin.service';
+import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
+import { ResponseListAdminDto } from './dto/list-admin.dto';
+import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { AdminRole } from './entities/admin.entity';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -27,8 +33,20 @@ export class AdminController {
   }
 
   @Get()
-  findAll() {
-    return this.adminService.findAll();
+  async findAll(
+    @Query() queryListAdminDto: QueryListAdminDto,
+  ): Promise<ResponseListAdminDto> {
+    const { page, limit } = queryListAdminDto;
+    queryListAdminDto.offset = (page - 1) * limit;
+    const { admins, count } = await this.adminService.findAll(
+      queryListAdminDto,
+    );
+    return new ResponseListAdminDto({
+      admins,
+      page,
+      limit,
+      totalData: count,
+    });
   }
 
   @Get(':id')
@@ -41,7 +59,14 @@ export class AdminController {
     type: CreateAdminDto,
   })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
+  update(
+    @LoggedUser() user: AdminDto,
+    @Param('id') id: string,
+    @Body() updateAdminDto: UpdateAdminDto,
+  ) {
+    if (user.id !== id && user.role !== AdminRole.SUPER_ADMIN) {
+      throw new Error('You are not authorized to update this admin');
+    }
     return this.adminService.update(id, updateAdminDto);
   }
 

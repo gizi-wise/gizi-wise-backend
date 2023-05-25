@@ -27,6 +27,4 @@ import { JwtStrategy } from './jwt.strategy';
   providers: [AdminAuthService, LocalStrategy, JwtStrategy],
   controllers: [AdminAuthController],
 })
-export class AdminAuthModule {
-  constructor(private configService: ConfigService) {}
-}
+export class AdminAuthModule {}
