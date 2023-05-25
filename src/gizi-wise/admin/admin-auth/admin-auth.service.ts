@@ -13,11 +13,14 @@ export class AdminAuthService {
 
   async validateAdmin(username: string, pass: string) {
     try {
-      const { password, ...result } =
-        await this.adminService.findOneByEmailOrUsername(username, true);
+      const { password, ...result } = await this.adminService
+        .findOneByEmailOrUsername(username, true)
+        .catch(() => {
+          throw new BadRequestException('Credential is not valid');
+        });
       const isPasswordMatching = await this.hashService.compare(pass, password);
       if (!isPasswordMatching) {
-        throw new BadRequestException('Wrong password');
+        throw new BadRequestException('Credential is not valid');
       }
       return result;
     } catch (error) {

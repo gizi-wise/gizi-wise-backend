@@ -7,11 +7,10 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from './admin-auth/jwt-auth.guard';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { AdminAuth } from './admin-auth/admin-auth.decorator';
 import { AdminService } from './admin.service';
 import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -20,8 +19,7 @@ import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminRole } from './entities/admin.entity';
 
-@UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+@AdminAuth()
 @ApiTags('Admins')
 @Controller('admins')
 export class AdminController {
