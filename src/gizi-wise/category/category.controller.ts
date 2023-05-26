@@ -1,4 +1,4 @@
-import { AdminAuth } from '@gizi-wise/admin/admin-auth/admin-auth.decorator';
+import { AdminAuth } from '@gizi-wise/admin-auth/admin-auth.decorator';
 import {
   Controller,
   Get,
@@ -17,7 +17,7 @@ import { QueryListCategoryDto } from './dto/query-list-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @ApiTags('Categories')
-@Controller('category')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 

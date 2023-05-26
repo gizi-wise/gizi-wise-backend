@@ -5,7 +5,6 @@ import { IsString, Min } from 'class-validator';
 export class QueryListCategoryDto {
   @ApiPropertyOptional({
     type: 'string',
-    example: 'sayur',
   })
   @IsOptionalWithEmptyString()
   @IsString()

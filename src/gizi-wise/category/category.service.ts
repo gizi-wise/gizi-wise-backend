@@ -9,6 +9,9 @@ import { Category } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {
+  private readonly errorMessages = {
+    notFound: 'Category not found',
+  };
   constructor(
     @InjectModel(Category)
     private readonly categoryModel: typeof Category,
@@ -55,7 +58,7 @@ export class CategoryService {
     try {
       const category = await this.categoryModel.findByPk(id);
       if (!category) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return new CategoryDto(category);
     } catch (error) {
@@ -74,7 +77,7 @@ export class CategoryService {
         },
       );
       if (affectedCount === 0) {
-        throw new NotFoundException('Category not found');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return await this.findOne(id);
     } catch (error) {
@@ -90,7 +93,7 @@ export class CategoryService {
         },
       });
       if (deleted === 0) {
-        throw new Error('Category not found');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return 'Category deleted';
     } catch (error) {
