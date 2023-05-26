@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { AdminAuthService } from './admin-auth.service';
 import { AdminAuthController } from './admin-auth.controller';
-import { AdminModule } from '../admin.module';
+import { AdminModule } from '../admin/admin.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';

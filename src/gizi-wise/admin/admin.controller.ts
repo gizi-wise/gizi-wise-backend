@@ -8,9 +8,10 @@ import {
   Param,
   Delete,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminAuth } from './admin-auth/admin-auth.decorator';
+import { AdminAuth } from '../admin-auth/admin-auth.decorator';
 import { AdminService } from './admin.service';
 import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -63,7 +64,9 @@ export class AdminController {
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
     if (user.id !== id && user.role !== AdminRole.SUPER_ADMIN) {
-      throw new Error('You are not authorized to update this admin');
+      throw new UnauthorizedException(
+        'You are not authorized to update this admin',
+      );
     }
     return this.adminService.update(id, updateAdminDto);
   }

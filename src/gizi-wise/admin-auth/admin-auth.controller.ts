@@ -5,7 +5,7 @@ import { AdminAuthLoginDto } from './admin-auth.dto';
 import { AdminAuthService } from './admin-auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 
-@ApiTags('Admins')
+@ApiTags('Admin Authentication')
 @Controller('admins/auth')
 export class AdminAuthController {
   constructor(private authService: AdminAuthService) {}

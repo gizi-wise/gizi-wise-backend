@@ -6,8 +6,9 @@ import {
   IsEmail,
   IsBoolean,
   validateSync,
+  IsEnum,
 } from 'class-validator';
-import { Admin } from '../entities/admin.entity';
+import { Admin, AdminRole } from '../entities/admin.entity';
 
 export class AdminDto {
   @IsNotEmpty()
@@ -35,8 +36,8 @@ export class AdminDto {
   image?: string;
 
   @IsNotEmpty()
-  @IsString()
-  role: string;
+  @IsEnum(AdminRole)
+  role: AdminRole;
 
   @IsNotEmpty()
   @IsBoolean()

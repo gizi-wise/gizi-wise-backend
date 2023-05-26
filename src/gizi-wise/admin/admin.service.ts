@@ -15,6 +15,11 @@ import { Admin, AdminRole } from './entities/admin.entity';
 
 @Injectable()
 export class AdminService {
+  private readonly errorMessages = {
+    notFound: 'Admin not found',
+    emailUsed: 'Email is already used',
+    usernameUsed: 'Username is already used',
+  };
   constructor(
     @InjectModel(Admin)
     private readonly adminModel: typeof Admin,
@@ -32,7 +37,7 @@ export class AdminService {
       }
       const admin = await this.adminModel.findOne({ where });
       if (admin) {
-        throw new BadRequestException('Email is already used.');
+        throw new BadRequestException(this.errorMessages.emailUsed);
       }
     } catch (error) {
       throw error;
@@ -49,7 +54,7 @@ export class AdminService {
       }
       const admin = await this.adminModel.findOne({ where });
       if (admin) {
-        throw new BadRequestException('Username is already used.');
+        throw new BadRequestException(this.errorMessages.usernameUsed);
       }
     } catch (error) {
       throw error;
@@ -124,7 +129,7 @@ export class AdminService {
     try {
       const admin = await this.adminModel.findOne({ where: { id } });
       if (!admin) {
-        throw new NotFoundException('Admin not found.');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return new AdminDto(admin, withPassword ? [] : ['password']);
     } catch (error) {
@@ -140,7 +145,7 @@ export class AdminService {
         },
       });
       if (!admin) {
-        throw new NotFoundException('Admin not found.');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return new AdminDto(admin, withPassword ? [] : ['password']);
     } catch (error) {
@@ -168,7 +173,7 @@ export class AdminService {
         },
       );
       if (affectedCount === 0) {
-        throw new NotFoundException('Admin not found.');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       const admin = await this.findOne(id);
       return admin;
@@ -182,7 +187,7 @@ export class AdminService {
       await this.findOne(id);
       const affectedCount = await this.adminModel.destroy({ where: { id } });
       if (affectedCount === 0) {
-        throw new NotFoundException('Admin not found.');
+        throw new NotFoundException(this.errorMessages.notFound);
       }
       return { affectedCount };
     } catch (error) {
