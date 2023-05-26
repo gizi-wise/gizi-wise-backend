@@ -6,7 +6,7 @@ import { Category } from '../entities/category.entity';
 export class CategoryDto {
   @IsOptionalWithEmptyString()
   @IsNumber()
-  id: number;
+  id?: number;
 
   @IsNotEmpty()
   @IsString()
@@ -14,11 +14,11 @@ export class CategoryDto {
 
   @IsOptionalWithEmptyString()
   @IsString()
-  description: string;
+  description?: string;
 
   @IsOptionalWithEmptyString()
   @IsString()
-  image: string;
+  image?: string;
 
   constructor(data: Category, omit: string[] = []) {
     Object.assign(this, data instanceof Category ? data.toJSON() : data);

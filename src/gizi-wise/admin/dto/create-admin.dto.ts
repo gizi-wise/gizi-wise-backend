@@ -50,10 +50,10 @@ export class CreateAdminDto {
   })
   @IsOptionalWithEmptyString()
   @IsString()
-  role: string;
+  role?: string;
 
   @ApiPropertyOptional()
   @IsOptionalWithEmptyString()
   @IsBoolean()
-  isActive: boolean;
+  isActive?: boolean;
 }

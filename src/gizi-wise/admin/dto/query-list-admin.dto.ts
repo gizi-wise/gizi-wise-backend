@@ -1,6 +1,6 @@
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsString, Min } from 'class-validator';
 
 export class QueryListAdminDto {
   @ApiPropertyOptional({
@@ -9,7 +9,7 @@ export class QueryListAdminDto {
   })
   @IsOptionalWithEmptyString()
   @IsString()
-  name: string;
+  name?: string;
 
   @ApiPropertyOptional({
     type: 'string',
@@ -17,23 +17,24 @@ export class QueryListAdminDto {
   })
   @IsOptionalWithEmptyString()
   @IsString()
-  role: string;
+  role?: string;
 
   @ApiPropertyOptional({
     type: 'boolean',
     example: true,
   })
   @IsOptionalWithEmptyString()
-  isActive: boolean;
+  @IsBoolean()
+  isActive?: boolean;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: 'number',
     example: 1,
   })
   @Min(1)
   page: number;
 
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: 'number',
     example: 10,
   })

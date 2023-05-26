@@ -28,7 +28,7 @@ export class AdminDto {
 
   @IsOptionalWithEmptyString()
   @IsString()
-  password: string;
+  password?: string;
 
   @IsOptionalWithEmptyString()
   @IsString()

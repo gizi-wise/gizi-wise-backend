@@ -1,5 +1,5 @@
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCategoryDto {
@@ -11,15 +11,15 @@ export class CreateCategoryDto {
   @IsString()
   name: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: 'string',
     example: 'Sayuran dan tumbuh-tumbuhan lainnya',
   })
   @IsOptionalWithEmptyString()
   @IsString()
-  description: string;
+  description?: string;
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     type: 'string',
     example: 'https://example.com/image.png',
   })
