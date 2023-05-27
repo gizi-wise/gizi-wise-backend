@@ -1,11 +1,10 @@
+import { validateAndTransformData } from '@common/functions/validateAndTransformData';
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
-import { InternalServerErrorException } from '@nestjs/common';
 import {
   IsNotEmpty,
   IsString,
   IsEmail,
   IsBoolean,
-  validateSync,
   IsEnum,
 } from 'class-validator';
 import { Admin, AdminRole } from '../entities/admin.entity';
@@ -44,16 +43,6 @@ export class AdminDto {
   isActive: boolean;
 
   constructor(data: Admin, omit: string[] = []) {
-    Object.assign(this, data instanceof Admin ? data.toJSON() : data);
-    const errors = validateSync(this, {
-      validationError: { target: true },
-      whitelist: true,
-    });
-    if (errors.length > 0) {
-      throw new InternalServerErrorException(errors);
-    }
-    if (omit.length) {
-      omit.forEach((key) => delete this[key]);
-    }
+    validateAndTransformData.call(this, data, omit);
   }
 }

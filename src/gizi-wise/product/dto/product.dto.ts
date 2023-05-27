@@ -1,15 +1,9 @@
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { CategoryDto } from '@gizi-wise/category/dto/category.dto';
-import { InternalServerErrorException } from '@nestjs/common';
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  validateSync,
-} from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Product, ProductType } from '../entities/product.entity';
+import { validateAndTransformData } from '@common/functions/validateAndTransformData';
 
 export class ProductDto {
   @IsOptionalWithEmptyString()
@@ -65,16 +59,6 @@ export class ProductDto {
   ediblePortion?: number;
 
   constructor(data: Product, omit: string[] = []) {
-    Object.assign(this, data instanceof Product ? data.toJSON() : data);
-    const errors = validateSync(this, {
-      validationError: { target: true },
-      whitelist: true,
-    });
-    if (errors.length > 0) {
-      throw new InternalServerErrorException(errors);
-    }
-    if (omit.length) {
-      omit.forEach((key) => delete this[key]);
-    }
+    validateAndTransformData.call(this, data, omit);
   }
 }
