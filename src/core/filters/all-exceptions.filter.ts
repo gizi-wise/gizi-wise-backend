@@ -4,12 +4,14 @@ import {
   HttpException,
   ExceptionFilter,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpAdapterHost } from '@nestjs/core';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger('HTTP');
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
     private configService: ConfigService,
@@ -18,25 +20,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
-    const error =
-      ctx.getResponse() instanceof HttpException
-        ? ctx.getResponse()
-        : exception;
+    const isResponseHTTPException = ctx.getResponse() instanceof HttpException;
+    const error = isResponseHTTPException ? ctx.getResponse() : exception;
 
-    const response =
-      ctx.getResponse() instanceof HttpException
-        ? ctx.getRequest()
-        : ctx.getResponse();
+    const response = isResponseHTTPException
+      ? ctx.getRequest()
+      : ctx.getResponse();
 
-    const httpStatus =
-      error instanceof HttpException
-        ? error.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const httpStatus = error.getStatus();
 
-    const responseBody: any =
-      error instanceof HttpException
-        ? error.getResponse()
-        : { statusCode: httpStatus, message: exception.message, data: {} };
+    const responseBody = error.getResponse();
 
     delete responseBody.error;
     responseBody.messages = Array.isArray(responseBody.message)
