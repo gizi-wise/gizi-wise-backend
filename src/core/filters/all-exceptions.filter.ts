@@ -41,7 +41,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
       httpStatus >= HttpStatus.INTERNAL_SERVER_ERROR ||
       this.configService.get('NODE_ENV') === 'development'
     ) {
-      console.error(error);
+      this.logger.error(
+        `${response.route.method} ${response.route.pattern} - ${httpStatus} - ${error.message}`,
+        error.stack,
+      );
     }
     httpAdapter.reply(response, responseBody, httpStatus);
   }
