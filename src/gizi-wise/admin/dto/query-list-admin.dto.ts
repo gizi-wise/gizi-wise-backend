@@ -1,9 +1,10 @@
+import { QueryListDto } from '@common/dto/query-list.dto';
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsString, Min } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsBoolean, IsEnum, IsString } from 'class-validator';
 import { AdminRole } from '../entities/admin.entity';
 
-export class QueryListAdminDto {
+export class QueryListAdminDto extends QueryListDto {
   @ApiPropertyOptional({
     type: 'string',
     example: 'admin',
@@ -27,20 +28,4 @@ export class QueryListAdminDto {
   @IsOptionalWithEmptyString()
   @IsBoolean()
   isActive?: boolean;
-
-  @ApiProperty({
-    type: 'number',
-    example: 1,
-  })
-  @Min(1)
-  page: number;
-
-  @ApiProperty({
-    type: 'number',
-    example: 10,
-  })
-  @Min(1)
-  limit: number;
-
-  offset: number;
 }
