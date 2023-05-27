@@ -8,7 +8,7 @@ import {
   Param,
   Delete,
   Query,
-  UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AdminAuth } from '../admin-auth/admin-auth.decorator';
@@ -20,13 +20,13 @@ import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminRole } from './entities/admin.entity';
 
-@AdminAuth()
 @ApiTags('Admins')
 @Controller('admins')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
+  @AdminAuth(AdminRole.SUPER_ADMIN)
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
@@ -58,20 +58,20 @@ export class AdminController {
     type: CreateAdminDto,
   })
   @Patch(':id')
+  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
   update(
     @LoggedUser() user: AdminDto,
     @Param('id') id: string,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
     if (user.id !== id && user.role !== AdminRole.SUPER_ADMIN) {
-      throw new UnauthorizedException(
-        'You are not authorized to update this admin',
-      );
+      throw new ForbiddenException();
     }
     return this.adminService.update(id, updateAdminDto);
   }
 
   @Delete(':id')
+  @AdminAuth(AdminRole.SUPER_ADMIN)
   remove(@Param('id') id: string) {
     return this.adminService.remove(id);
   }

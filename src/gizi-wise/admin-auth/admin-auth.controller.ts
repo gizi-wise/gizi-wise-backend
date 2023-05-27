@@ -1,3 +1,4 @@
+import { AdminRole } from '@gizi-wise/admin/entities/admin.entity';
 import { Controller, UseGuards, Post, Get, Request } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 import { AdminAuth } from './admin-auth.decorator';
@@ -22,7 +23,7 @@ export class AdminAuthController {
   }
 
   @Get('profile')
-  @AdminAuth()
+  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
   getProfile(@Request() req: any) {
     return req.user;
   }
