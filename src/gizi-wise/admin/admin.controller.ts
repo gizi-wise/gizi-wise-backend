@@ -26,7 +26,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
-  @AdminAuth(AdminRole.SUPER_ADMIN)
+  @AdminAuth()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
@@ -58,7 +58,7 @@ export class AdminController {
     type: CreateAdminDto,
   })
   @Patch(':id')
-  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
+  @AdminAuth(AdminRole.ADMIN)
   update(
     @LoggedUser() user: AdminDto,
     @Param('id') id: string,
@@ -71,7 +71,7 @@ export class AdminController {
   }
 
   @Delete(':id')
-  @AdminAuth(AdminRole.SUPER_ADMIN)
+  @AdminAuth()
   remove(@Param('id') id: string) {
     return this.adminService.remove(id);
   }

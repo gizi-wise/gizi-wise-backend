@@ -23,7 +23,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
+  @AdminAuth(AdminRole.ADMIN)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
@@ -49,7 +49,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
+  @AdminAuth(AdminRole.ADMIN)
   update(
     @Param('id') id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -58,7 +58,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
+  @AdminAuth(AdminRole.ADMIN)
   remove(@Param('id') id: number) {
     return this.categoryService.remove(id);
   }

@@ -23,7 +23,7 @@ export class AdminAuthController {
   }
 
   @Get('profile')
-  @AdminAuth(AdminRole.ADMIN, AdminRole.SUPER_ADMIN)
+  @AdminAuth(AdminRole.ADMIN)
   getProfile(@Request() req: any) {
     return req.user;
   }

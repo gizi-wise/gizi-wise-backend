@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module, forwardRef, Global } from '@nestjs/common';
 import { AdminAuthService } from './admin-auth.service';
 import { AdminAuthController } from './admin-auth.controller';
 import { AdminModule } from '../admin/admin.module';
@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
 
+@Global()
 @Module({
   imports: [
     forwardRef(() => AdminModule),
@@ -26,5 +27,6 @@ import { JwtStrategy } from './jwt.strategy';
   ],
   providers: [AdminAuthService, LocalStrategy, JwtStrategy],
   controllers: [AdminAuthController],
+  exports: [AdminModule],
 })
 export class AdminAuthModule {}
