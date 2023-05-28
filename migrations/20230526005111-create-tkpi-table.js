@@ -22,7 +22,7 @@ module.exports = {
         allowNull: false,
       },
       value: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: true,
         defaultValue: null,
       },

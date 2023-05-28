@@ -1,10 +1,12 @@
 import { Category } from '@gizi-wise/category/entities/category.entity';
+import { Tkpi } from '@gizi-wise/tkpi/entities/tkpi.entity';
 import {
   AutoIncrement,
   BelongsTo,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -58,6 +60,9 @@ export class Product extends Model {
 
   @Column
   ediblePortion: number;
+
+  @HasMany(() => Tkpi)
+  tkpis: Tkpi[];
 }
 
 export enum ProductType {

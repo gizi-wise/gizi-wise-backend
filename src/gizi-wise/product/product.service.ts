@@ -1,4 +1,5 @@
 import { Category } from '@gizi-wise/category/entities/category.entity';
+import { Tkpi } from '@gizi-wise/tkpi/entities/tkpi.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, WhereOptions } from 'sequelize';
@@ -74,7 +75,15 @@ export class ProductService {
         include: [
           {
             model: Category,
-            attributes: ['id', 'name'],
+            attributes: {
+              exclude: ['createdAt', 'deletedAt', 'updatedAt'],
+            },
+          },
+          {
+            model: Tkpi,
+            attributes: {
+              exclude: ['productId', 'createdAt', 'deletedAt', 'updatedAt'],
+            },
           },
         ],
       });

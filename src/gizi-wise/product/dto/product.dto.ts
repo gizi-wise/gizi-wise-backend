@@ -1,9 +1,16 @@
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { CategoryDto } from '@gizi-wise/category/dto/category.dto';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { Product, ProductType } from '../entities/product.entity';
 import { validateAndTransformData } from '@common/functions/validateAndTransformData';
+import { TkpiDto } from '@gizi-wise/tkpi/dto/tkpi.dto';
 
 export class ProductDto {
   @IsOptionalWithEmptyString()
@@ -30,7 +37,7 @@ export class ProductDto {
   @IsNumber()
   categoryId: number;
 
-  @IsNotEmpty()
+  @IsOptionalWithEmptyString()
   @Type(() => CategoryDto)
   category: CategoryDto;
 
@@ -57,6 +64,11 @@ export class ProductDto {
   @IsOptionalWithEmptyString()
   @IsNumber()
   ediblePortion?: number;
+
+  @IsOptionalWithEmptyString()
+  @IsArray()
+  @Type(() => TkpiDto)
+  tkpis: TkpiDto[];
 
   constructor(data: Product, omit: string[] = []) {
     validateAndTransformData.call(this, data, omit);
