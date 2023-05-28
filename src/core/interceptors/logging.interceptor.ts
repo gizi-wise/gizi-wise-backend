@@ -25,16 +25,12 @@ export class LoggingInterceptor implements NestInterceptor {
       }),
       catchError((err) => {
         const status = err.status ?? HttpStatus.INTERNAL_SERVER_ERROR;
-        const errorMessage = err.response?.message;
         if (status < 500) {
           this.logger.warn(`${messageLog} - ${status} - ${Date.now() - now}ms`);
         } else {
           this.logger.error(
             `${messageLog} - ${status} - ${Date.now() - now}ms`,
           );
-        }
-        if (errorMessage && !(errorMessage instanceof Array)) {
-          err.response.message = [errorMessage];
         }
         return throwError(() => err);
       }),

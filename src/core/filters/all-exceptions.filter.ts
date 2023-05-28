@@ -27,24 +27,28 @@ export class AllExceptionsFilter implements ExceptionFilter {
       ? ctx.getRequest()
       : ctx.getResponse();
 
-    const httpStatus = error.getStatus();
+    const httpStatus = error.getStatus
+      ? error.getStatus()
+      : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const responseBody = error.getResponse();
+    const responseError = error.getResponse ? error.getResponse() : error;
 
-    delete responseBody.error;
-    responseBody.messages = Array.isArray(responseBody.message)
-      ? responseBody.message
-      : [responseBody.message];
-    delete responseBody.message;
-    responseBody.data = {};
+    const responseBody = {
+      statusCode: httpStatus,
+      messages: Array.isArray(responseError.message)
+        ? responseError.message
+        : [responseError.message],
+      data: {},
+    };
+
     if (
       httpStatus >= HttpStatus.INTERNAL_SERVER_ERROR ||
       this.configService.get('NODE_ENV') === 'development'
     ) {
       this.logger.error(
         `${response.route.method} ${response.route.pattern} - ${httpStatus} - ${error.message}`,
-        error.stack,
       );
+      console.error(error);
     }
     httpAdapter.reply(response, responseBody, httpStatus);
   }
