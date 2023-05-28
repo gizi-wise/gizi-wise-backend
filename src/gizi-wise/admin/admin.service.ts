@@ -94,7 +94,8 @@ export class AdminService {
 
   async findAll(queryListAdminDto: QueryListAdminDto) {
     try {
-      const { limit, offset, isActive, name, role } = queryListAdminDto;
+      const { limit, offset, isActive, name, role, order, sort } =
+        queryListAdminDto;
       const whereOptions: WhereOptions = {};
       if (typeof isActive === 'boolean') {
         whereOptions['isActive'] = isActive;
@@ -114,6 +115,7 @@ export class AdminService {
         },
         limit,
         offset,
+        order: [[sort, order]],
         distinct: true,
       });
       return {

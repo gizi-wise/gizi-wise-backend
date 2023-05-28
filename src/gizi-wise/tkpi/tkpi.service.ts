@@ -29,7 +29,7 @@ export class TkpiService {
 
   async findAll(query: QueryListTkpiDto) {
     try {
-      const { limit, offset, productId } = query;
+      const { limit, offset, productId, sort, order } = query;
       const whereOptions: any = {};
       if (productId) {
         whereOptions['productId'] = productId;
@@ -47,6 +47,7 @@ export class TkpiService {
         ],
         limit,
         offset,
+        order: [[sort, order]],
       });
       return {
         tkpis: rows.map((row) => new TkpiDto(row)),

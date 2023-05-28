@@ -29,7 +29,7 @@ export class CategoryService {
 
   async findAll(query: QueryListCategoryDto) {
     try {
-      const { limit, offset, name } = query;
+      const { limit, offset, name, order, sort } = query;
       const whereOptions: WhereOptions = {};
       if (name) {
         whereOptions['name'] = {
@@ -43,6 +43,7 @@ export class CategoryService {
         },
         limit,
         offset,
+        order: [[sort, order]],
         distinct: true,
       });
       return {

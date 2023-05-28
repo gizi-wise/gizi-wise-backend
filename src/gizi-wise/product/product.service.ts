@@ -31,7 +31,7 @@ export class ProductService {
 
   async findAll(query: QueryListProductDto) {
     try {
-      const { limit, offset, name, type, categoryId } = query;
+      const { limit, offset, name, type, categoryId, order, sort } = query;
       const whereOptions: WhereOptions = {};
       if (name) {
         whereOptions['name'] = {
@@ -58,6 +58,7 @@ export class ProductService {
         },
         limit,
         offset,
+        order: [[sort, order]],
         distinct: true,
       });
       return {
