@@ -29,7 +29,7 @@ export class CreateTkpiDto {
   @ApiPropertyOptional({
     type: 'number',
   })
-  @IsOptionalWithEmptyString()
+  @IsNotEmpty()
   @IsNumber()
   value: number;
 

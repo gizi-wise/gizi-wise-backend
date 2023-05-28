@@ -31,7 +31,7 @@ export class TkpiDto {
   @IsNumber()
   value: number;
 
-  @IsNotEmpty()
+  @IsOptionalWithEmptyString()
   @IsString()
   unit: string;
 
