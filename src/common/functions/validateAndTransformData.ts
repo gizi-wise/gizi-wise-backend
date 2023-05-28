@@ -11,7 +11,14 @@ export function validateAndTransformData(data: any, omit: string[] = []) {
   if (errors.length > 0) {
     throw new InternalServerErrorException(errors);
   }
+
   if (omit.length) {
     omit.forEach((key) => delete this[key]);
   }
+
+  Object.keys(this).forEach((key) => {
+    if (this[key] === '') {
+      this[key] = null;
+    }
+  });
 }
