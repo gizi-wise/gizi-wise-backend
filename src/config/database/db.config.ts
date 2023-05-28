@@ -14,8 +14,7 @@ export const getDatabaseConfig = async (): Promise<SequelizeModuleOptions> => {
     synchronize: true,
     timezone: process.env.TZ,
     pool: {
-      max: 10,
-      min: 2,
+      min: 1,
       acquire: 30000,
       idle: 3600000,
     },
