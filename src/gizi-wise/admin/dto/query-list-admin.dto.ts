@@ -2,7 +2,7 @@ import { QueryListDto } from '@common/dto/query-list.dto';
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsBoolean, IsEnum, IsString } from 'class-validator';
-import { AdminRole } from '../entities/admin.entity';
+import { Role } from '../entities/admin.entity';
 
 export class QueryListAdminDto extends QueryListDto {
   @ApiPropertyOptional({
@@ -18,8 +18,8 @@ export class QueryListAdminDto extends QueryListDto {
     enum: ['admin', 'superadmin'],
   })
   @IsOptionalWithEmptyString()
-  @IsEnum(AdminRole)
-  role?: AdminRole;
+  @IsEnum(Role)
+  role?: Role;
 
   @ApiPropertyOptional({
     type: 'boolean',

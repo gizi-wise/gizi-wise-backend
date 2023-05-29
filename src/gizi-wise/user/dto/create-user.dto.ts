@@ -16,6 +16,10 @@ export class CreateUserDto {
 
   @IsOptionalWithEmptyString()
   @IsString()
+  role?: string;
+
+  @IsOptionalWithEmptyString()
+  @IsString()
   image?: string;
 
   @IsOptionalWithEmptyString()

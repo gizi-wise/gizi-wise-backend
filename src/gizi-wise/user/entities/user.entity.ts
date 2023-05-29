@@ -23,6 +23,9 @@ export class User extends Model {
   email: string;
 
   @Column
+  role: string;
+
+  @Column
   image?: string;
 
   @Column

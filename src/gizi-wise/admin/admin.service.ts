@@ -12,7 +12,7 @@ import { CreateAdminDto } from './dto/create-admin.dto';
 import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { ReviveAdminDto } from './dto/revive-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
-import { Admin, AdminRole } from './entities/admin.entity';
+import { Admin, Role } from './entities/admin.entity';
 
 @Injectable()
 export class AdminService {
@@ -68,7 +68,7 @@ export class AdminService {
         username,
         email,
         password,
-        role = AdminRole.ADMIN,
+        role = Role.ADMIN,
         isActive = false,
         ...props
       } = createAdminDto;
@@ -130,6 +130,7 @@ export class AdminService {
 
   async findOne(id: string, withPassword = false) {
     try {
+      console.log(id);
       const admin = await this.adminModel.findOne({ where: { id } });
       if (!admin) {
         throw new NotFoundException(this.errorMessages.notFound);

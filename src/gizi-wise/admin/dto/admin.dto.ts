@@ -1,7 +1,7 @@
 import { validateAndTransformData } from '@common/functions/validateAndTransformData';
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { IsNotEmpty, IsString, IsBoolean, IsEnum } from 'class-validator';
-import { Admin, AdminRole } from '../entities/admin.entity';
+import { Admin, Role } from '../entities/admin.entity';
 import { CreateAdminDto } from './create-admin.dto';
 
 export class AdminDto extends CreateAdminDto {
@@ -14,8 +14,8 @@ export class AdminDto extends CreateAdminDto {
   password?: string;
 
   @IsNotEmpty()
-  @IsEnum(AdminRole)
-  role: AdminRole;
+  @IsEnum(Role)
+  role: Role;
 
   @IsNotEmpty()
   @IsBoolean()

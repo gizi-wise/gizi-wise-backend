@@ -1,11 +1,5 @@
-import { FirebaseVerifyTokenResultDto } from '@common/firebase/firebase.dto';
-import { FirebaseService } from '@common/firebase/firebase.service';
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
 import { Op, WhereOptions } from 'sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { QueryListUserDto } from './dto/query-list-user.dto';
@@ -17,24 +11,26 @@ import { User } from './entities/user.entity';
 export class UserService {
   private readonly errorMessages = {
     notFound: 'User not found',
-    expiredJwt: 'Expired JWT token',
   };
   constructor(
-    @Inject(User)
+    @InjectModel(User)
     private userModel: typeof User,
-    private readonly firebaseService: FirebaseService,
   ) {}
 
   async findOrCreate(createUserDto: CreateUserDto) {
     const { id, ...payloadCreateUser } = createUserDto;
     try {
-      const [user] = await this.userModel.findOrCreate({
+      payloadCreateUser.role = 'user';
+      const [user, isNewAccount] = await this.userModel.findOrCreate({
         where: {
           id,
         },
         defaults: { ...payloadCreateUser },
       });
-      return new UserDto(user);
+      return {
+        user: new UserDto(user),
+        isNewAccount,
+      };
     } catch (error) {
       throw error;
     }
@@ -68,8 +64,16 @@ export class UserService {
     }
   }
 
-  findOne(id: string) {
-    return this.userModel.findByPk(id);
+  async findOne(id: string) {
+    try {
+      const user = await this.userModel.findByPk(id);
+      if (!user) {
+        throw new NotFoundException(this.errorMessages.notFound);
+      }
+      return new UserDto(user);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -94,25 +98,12 @@ export class UserService {
         where: {
           id,
         },
+        force: true,
       });
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
       }
       return 'User deleted';
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async verifyIdToken(idToken: string) {
-    try {
-      const decodedToken = (await this.firebaseService.verifyIdToken(
-        idToken,
-      )) as FirebaseVerifyTokenResultDto;
-      const currentTime = new Date().getTime() / 1000;
-      if (!decodedToken.iat || decodedToken.iat < currentTime) {
-        throw new UnauthorizedException(this.errorMessages.expiredJwt);
-      }
     } catch (error) {
       throw error;
     }

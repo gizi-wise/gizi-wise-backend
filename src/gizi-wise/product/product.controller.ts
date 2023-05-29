@@ -12,8 +12,8 @@ import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AdminAuth } from '@gizi-wise/admin-auth/admin-auth.decorator';
-import { AdminRole } from '@gizi-wise/admin/entities/admin.entity';
+import { Auth } from '@gizi-wise/auth/auth.decorator';
+import { Role } from '@gizi-wise/admin/entities/admin.entity';
 import { QueryListProductDto } from './dto/query-list-product.dto';
 import { ResponseListProductDto } from './dto/list-product.dto';
 
@@ -23,7 +23,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto);
   }
@@ -49,13 +49,13 @@ export class ProductController {
   }
 
   @Patch(':id')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   update(@Param('id') id: number, @Body() updateProductDto: UpdateProductDto) {
     return this.productService.update(id, updateProductDto);
   }
 
   @Delete(':id')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   remove(@Param('id') id: number) {
     return this.productService.remove(id);
   }

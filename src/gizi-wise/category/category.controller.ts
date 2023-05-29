@@ -1,5 +1,5 @@
-import { AdminAuth } from '@gizi-wise/admin-auth/admin-auth.decorator';
-import { AdminRole } from '@gizi-wise/admin/entities/admin.entity';
+import { Auth } from '@gizi-wise/auth/auth.decorator';
+import { Role } from '@gizi-wise/admin/entities/admin.entity';
 import {
   Controller,
   Get,
@@ -23,7 +23,7 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
@@ -49,7 +49,7 @@ export class CategoryController {
   }
 
   @Patch(':id')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   update(
     @Param('id') id: number,
     @Body() updateCategoryDto: UpdateCategoryDto,
@@ -58,7 +58,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   remove(@Param('id') id: number) {
     return this.categoryService.remove(id);
   }

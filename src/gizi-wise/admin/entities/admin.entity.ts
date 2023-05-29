@@ -41,13 +41,14 @@ export class Admin extends Model {
   image?: string;
 
   @Column
-  role: AdminRole;
+  role: Role;
 
   @Column
   isActive: boolean;
 }
 
-export enum AdminRole {
+export enum Role {
   SUPER_ADMIN = 'superadmin',
   ADMIN = 'admin',
+  USER = 'user',
 }

@@ -11,7 +11,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminAuth } from '../admin-auth/admin-auth.decorator';
+import { Auth } from '../auth/auth.decorator';
 import { AdminService } from './admin.service';
 import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
@@ -19,7 +19,7 @@ import { ResponseListAdminDto } from './dto/list-admin.dto';
 import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { ReviveAdminDto } from './dto/revive-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
-import { AdminRole } from './entities/admin.entity';
+import { Role } from './entities/admin.entity';
 
 @ApiTags('Admins')
 @Controller('admins')
@@ -27,7 +27,7 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post()
-  @AdminAuth()
+  @Auth()
   create(@Body() createAdminDto: CreateAdminDto) {
     return this.adminService.create(createAdminDto);
   }
@@ -59,26 +59,26 @@ export class AdminController {
     type: CreateAdminDto,
   })
   @Patch(':id')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   update(
     @LoggedUser() user: AdminDto,
     @Param('id') id: string,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
-    if (user.id !== id && user.role !== AdminRole.SUPER_ADMIN) {
+    if (user.id !== id && user.role !== Role.SUPER_ADMIN) {
       throw new ForbiddenException();
     }
     return this.adminService.update(id, updateAdminDto);
   }
 
   @Delete(':id')
-  @AdminAuth()
+  @Auth()
   remove(@Param('id') id: string) {
     return this.adminService.remove(id);
   }
 
   @Post('revive')
-  @AdminAuth()
+  @Auth()
   @ApiBody({
     description: 'Revive admin, atleast username or email is provided',
     type: ReviveAdminDto,
