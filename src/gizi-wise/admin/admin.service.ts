@@ -1,5 +1,5 @@
-import { HashService } from '@common/hash/hash.service';
-import { UuidService } from '@common/uuid/uuid.service';
+import { HashService } from '@common/utilities/hash/hash.service';
+import { UuidService } from '@common/utilities/uuid/uuid.service';
 import {
   BadRequestException,
   Injectable,
