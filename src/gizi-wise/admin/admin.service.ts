@@ -10,6 +10,7 @@ import { Op, WhereOptions } from 'sequelize';
 import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { QueryListAdminDto } from './dto/query-list-admin.dto';
+import { ReviveAdminDto } from './dto/revive-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { Admin, AdminRole } from './entities/admin.entity';
 
@@ -35,7 +36,7 @@ export class AdminService {
       if (id) {
         where['id'] = { [Op.ne]: id };
       }
-      const admin = await this.adminModel.findOne({ where });
+      const admin = await this.adminModel.findOne({ where, paranoid: false });
       if (admin) {
         throw new BadRequestException(this.errorMessages.emailUsed);
       }
@@ -52,7 +53,7 @@ export class AdminService {
       if (id) {
         where['id'] = { [Op.ne]: id };
       }
-      const admin = await this.adminModel.findOne({ where });
+      const admin = await this.adminModel.findOne({ where, paranoid: false });
       if (admin) {
         throw new BadRequestException(this.errorMessages.usernameUsed);
       }
@@ -192,6 +193,23 @@ export class AdminService {
         throw new NotFoundException(this.errorMessages.notFound);
       }
       return { affectedCount };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async revive(reviveAdminDto: ReviveAdminDto) {
+    const { username, email } = reviveAdminDto;
+    try {
+      if (!username && !email) {
+        throw new BadRequestException('Atleast username or email is provided');
+      }
+      await this.adminModel.restore({
+        where: {
+          [Op.or]: [{ email: email ?? null }, { username: username ?? null }],
+        },
+      });
+      return this.findOneByEmailOrUsername(username ?? email);
     } catch (error) {
       throw error;
     }

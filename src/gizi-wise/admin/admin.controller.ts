@@ -17,6 +17,7 @@ import { AdminDto } from './dto/admin.dto';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { ResponseListAdminDto } from './dto/list-admin.dto';
 import { QueryListAdminDto } from './dto/query-list-admin.dto';
+import { ReviveAdminDto } from './dto/revive-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminRole } from './entities/admin.entity';
 
@@ -74,5 +75,15 @@ export class AdminController {
   @AdminAuth()
   remove(@Param('id') id: string) {
     return this.adminService.remove(id);
+  }
+
+  @Post('revive')
+  @AdminAuth()
+  @ApiBody({
+    description: 'Revive admin, atleast username or email is provided',
+    type: ReviveAdminDto,
+  })
+  revive(@Body() reviveAdminDto: ReviveAdminDto) {
+    return this.adminService.revive(reviveAdminDto);
   }
 }
