@@ -18,3 +18,13 @@ export class AdminAuthLoginDto {
   @IsString()
   password: string;
 }
+
+export class UserAuthLoginDto {
+  @ApiProperty({
+    type: 'string',
+    example: 'JWT from firebase',
+  })
+  @IsNotEmpty()
+  @IsString()
+  idToken: string;
+}

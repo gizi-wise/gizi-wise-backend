@@ -1,17 +1,20 @@
 import { Module, forwardRef, Global } from '@nestjs/common';
-import { AdminAuthService } from './admin-auth.service';
-import { AdminAuthController } from './admin-auth.controller';
-import { AdminModule } from '../admin/admin.module';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './jwt.strategy';
+import { UserModule } from '@gizi-wise/user/user.module';
+import { AuthAdminController } from './auth-admin.controller';
+import { AdminModule } from '@gizi-wise/admin/admin.module';
+import { AuthService } from './auth.service';
+import { AuthUserController } from './auth-user.controller';
 
 @Global()
 @Module({
   imports: [
     forwardRef(() => AdminModule),
+    UserModule,
     PassportModule,
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => {
@@ -25,8 +28,8 @@ import { JwtStrategy } from './jwt.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [AdminAuthService, LocalStrategy, JwtStrategy],
-  controllers: [AdminAuthController],
-  exports: [AdminModule],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
+  controllers: [AuthAdminController, AuthUserController],
+  exports: [AdminModule, UserModule],
 })
-export class AdminAuthModule {}
+export class AuthModule {}

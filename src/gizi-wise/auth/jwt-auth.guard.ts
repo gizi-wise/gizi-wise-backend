@@ -1,15 +1,18 @@
 import { IS_PUBLIC_KEY } from '@common/decorators/public.decorator';
 import { ROLES_KEY } from '@common/decorators/roles.decorator';
 import { AdminService } from '@gizi-wise/admin/admin.service';
+import { Role } from '@gizi-wise/admin/entities/admin.entity';
+import { UserService } from '@gizi-wise/user/user.service';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
-export class AdminJwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
+export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
   constructor(
-    private reflector: Reflector,
-    private adminService: AdminService,
+    private readonly reflector: Reflector,
+    private readonly adminService: AdminService,
+    private readonly userService: UserService,
   ) {
     super();
   }
@@ -24,15 +27,19 @@ export class AdminJwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
     }
     await super.canActivate(context);
     const { user } = context.switchToHttp().getRequest();
-    await this.adminService.findOne(user.id, false);
     const requiredRoles = new Set(
       this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
         context.getHandler(),
         context.getClass(),
       ]),
     );
-    if (requiredRoles.size === 0) {
-      return true;
+    if (requiredRoles.has(Role.USER)) {
+      requiredRoles.add(Role.ADMIN);
+    }
+    if (user.role === 'user') {
+      await this.userService.findOne(user.id);
+    } else {
+      await this.adminService.findOne(user.id, false);
     }
     return requiredRoles.has(user.role);
   }

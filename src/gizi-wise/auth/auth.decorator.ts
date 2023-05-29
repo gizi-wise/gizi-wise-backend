@@ -1,12 +1,12 @@
 import { Roles } from '@common/decorators/roles.decorator';
-import { AdminRole } from '@gizi-wise/admin/entities/admin.entity';
+import { Role } from '@gizi-wise/admin/entities/admin.entity';
 import { applyDecorators, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { AdminJwtAuthGuard } from './jwt-auth.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
-export function AdminAuth(...roles: AdminRole[]) {
+export function Auth(...roles: Role[]) {
   return applyDecorators(
-    UseGuards(AdminJwtAuthGuard),
+    UseGuards(JwtAuthGuard),
     Roles(...roles),
     ApiBearerAuth(),
     ApiUnauthorizedResponse({ description: 'Unauthorized' }),

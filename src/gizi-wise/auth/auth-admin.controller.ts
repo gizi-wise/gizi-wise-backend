@@ -1,15 +1,15 @@
-import { AdminRole } from '@gizi-wise/admin/entities/admin.entity';
+import { Role } from '@gizi-wise/admin/entities/admin.entity';
 import { Controller, UseGuards, Post, Get, Request } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBody, ApiTags } from '@nestjs/swagger';
-import { AdminAuth } from './admin-auth.decorator';
-import { AdminAuthLoginDto } from './admin-auth.dto';
-import { AdminAuthService } from './admin-auth.service';
+import { Auth } from './auth.decorator';
+import { AdminAuthLoginDto } from './auth.dto';
+import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './local-auth.guard';
 
 @ApiTags('Admin Authentication')
 @Controller('admins/auth')
-export class AdminAuthController {
-  constructor(private authService: AdminAuthService) {}
+export class AuthAdminController {
+  constructor(private authService: AuthService) {}
 
   @Post('login')
   @ApiBody({
@@ -23,7 +23,7 @@ export class AdminAuthController {
   }
 
   @Get('profile')
-  @AdminAuth(AdminRole.ADMIN)
+  @Auth(Role.ADMIN)
   getProfile(@Request() req: any) {
     return req.user;
   }
