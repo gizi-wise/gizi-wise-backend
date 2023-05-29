@@ -33,6 +33,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "firebase-admin": "^11.8.0",
     "helmet": "^7.0.0",
     "husky": "^8.0.3",
     "hyper-express": "^6.5.9",

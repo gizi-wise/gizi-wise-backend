@@ -12,5 +12,6 @@ const envSchema = Joi.object({
   DB_DATABASE: Joi.string().default('postgres'),
   JWT_SECRET: Joi.string().default('secret'),
   JWT_EXPIRATION_TIME: Joi.string().default('2d'),
+  FIREBASE_CONFIG: Joi.string().default(''),
 });
 export default envSchema;
