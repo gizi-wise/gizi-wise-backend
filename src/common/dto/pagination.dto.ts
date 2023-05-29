@@ -11,7 +11,7 @@ export class PaginationDto {
 
   @IsInt()
   @Min(1)
-  totalPage: number;
+  totalPage?: number;
 
   @IsInt()
   @Min(0)

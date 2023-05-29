@@ -35,7 +35,7 @@ export class CreateAdminDto {
   @IsNotEmpty()
   @IsString()
   @IsPasswordStrong()
-  password: string;
+  password?: string;
 
   @ApiPropertyOptional({
     type: 'string',

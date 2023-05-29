@@ -1,26 +1,16 @@
 import { validateAndTransformData } from '@common/functions/validateAndTransformData';
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsNumber } from 'class-validator';
 import { Category } from '../entities/category.entity';
+import { CreateCategoryDto } from './create-category.dto';
 
-export class CategoryDto {
+export class CategoryDto extends CreateCategoryDto {
   @IsOptionalWithEmptyString()
   @IsNumber()
   id?: number;
 
-  @IsNotEmpty()
-  @IsString()
-  name: string;
-
-  @IsOptionalWithEmptyString()
-  @IsString()
-  description?: string;
-
-  @IsOptionalWithEmptyString()
-  @IsString()
-  image?: string;
-
   constructor(data: Category, omit: string[] = []) {
+    super();
     validateAndTransformData.call(this, data, omit);
   }
 }
