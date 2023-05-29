@@ -8,12 +8,16 @@ export class FirebaseService {
   private readonly logger = new Logger('Firebase');
   private readonly firebaseApp: App;
   constructor(private configService: ConfigService) {
-    this.firebaseApp = firebase.initializeApp();
+    this.firebaseApp = firebase.initializeApp({
+      credential: firebase.credential.cert(
+        JSON.parse(this.configService.get('FIREBASE_CONFIG')),
+      ),
+    });
     if (firebase.apps.length) {
       this.logger.log('Firebase App has initialized');
     }
   }
-  getApp(): App {
-    return this.firebaseApp;
+  verifyIdToken(idToken: string): Promise<firebase.auth.DecodedIdToken> {
+    return firebase.auth(this.firebaseApp).verifyIdToken(idToken);
   }
 }
