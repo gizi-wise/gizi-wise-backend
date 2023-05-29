@@ -1,11 +1,11 @@
 import { Global, Module } from '@nestjs/common';
-import { UuidService } from './uuid/uuid.service';
-import { HashService } from './hash/hash.service';
 import { FirebaseService } from './firebase/firebase.service';
+import { UtilitiesModule } from './utilities/utilities.module';
 
 @Global()
 @Module({
-  providers: [UuidService, HashService, FirebaseService],
-  exports: [UuidService, HashService, FirebaseService],
+  imports: [UtilitiesModule],
+  providers: [FirebaseService],
+  exports: [FirebaseService, UtilitiesModule],
 })
 export class CommonModule {}
