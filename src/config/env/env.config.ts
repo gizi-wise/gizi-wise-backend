@@ -1,7 +1,8 @@
-import envSchema from './env.schema';
+import { ConfigModuleOptions } from '@nestjs/config';
+import { validate } from './env.validation';
 
-const envConfig = {
-  validationSchema: envSchema,
+const envConfig: ConfigModuleOptions = {
+  validate,
   validationOptions: {
     allowUnknown: true,
     abortEarly: true,
