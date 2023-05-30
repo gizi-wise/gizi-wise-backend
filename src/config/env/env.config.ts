@@ -1,5 +1,5 @@
 import { ConfigModuleOptions } from '@nestjs/config';
-import { validate } from './env.validation';
+import { validate } from './env.validator';
 
 const envConfig: ConfigModuleOptions = {
   validate,
