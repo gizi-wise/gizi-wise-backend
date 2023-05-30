@@ -53,15 +53,15 @@ jobs:
       - name: 'Docker build'
         run: |-
           docker build \
-          --build-arg="TZ=Asia/Jakarta" \
-          --build-arg="DB_HOST=${{ secrets.DB_HOST }}" \
-          --build-arg="DB_PORT=${{ secrets.DB_PORT }}" \
-          --build-arg="DB_USERNAME=${{ secrets.DB_USERNAME }}" \
-          --build-arg="DB_PASSWORD=${{ secrets.DB_PASSWORD }}" \
-          --build-arg="DB_DATABASE=${{ secrets.DB_DATABASE }}" \
-          --build-arg="JWT_SECRET=${{ secrets.JWT_SECRET }}" \
-          --build-arg="JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }}" \
-          --build-arg="FIREBASE_CONFIG=${{ secrets.FIREBASE_CONFIG }}" \
+          --build-arg TZ=Asia/Jakarta \
+          --build-arg DB_HOST=${{ secrets.DB_HOST }} \
+          --build-arg DB_PORT=${{ secrets.DB_PORT }} \
+          --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} \
+          --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          --build-arg DB_DATABASE=${{ secrets.DB_DATABASE }} \
+          --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+          --build-arg JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }} \
+          --build-arg FIREBASE_CONFIG='${{ secrets.FIREBASE_CONFIG }}' \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-
