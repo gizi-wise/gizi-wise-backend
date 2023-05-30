@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as firebase from 'firebase-admin';
 import { App } from 'firebase-admin/app';
@@ -17,7 +17,14 @@ export class FirebaseService {
       this.logger.log('Firebase App has initialized');
     }
   }
-  verifyIdToken(idToken: string): Promise<firebase.auth.DecodedIdToken> {
-    return firebase.auth(this.firebaseApp).verifyIdToken(idToken);
+  async verifyIdToken(idToken: string): Promise<firebase.auth.DecodedIdToken> {
+    try {
+      const decodedToken = await firebase
+        .auth(this.firebaseApp)
+        .verifyIdToken(idToken);
+      return decodedToken;
+    } catch (error) {
+      throw new BadRequestException('Please check your token');
+    }
   }
 }
