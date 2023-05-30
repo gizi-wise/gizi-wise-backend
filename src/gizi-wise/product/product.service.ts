@@ -2,7 +2,7 @@ import { Category } from '@gizi-wise/category/entities/category.entity';
 import { Tkpi } from '@gizi-wise/tkpi/entities/tkpi.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, WhereOptions } from 'sequelize';
+import { Includeable, Op, WhereOptions } from 'sequelize';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductDto } from './dto/product.dto';
 import { QueryListProductDto } from './dto/query-list-product.dto';
@@ -31,7 +31,17 @@ export class ProductService {
 
   async findAll(query: QueryListProductDto) {
     try {
-      const { limit, offset, name, type, categoryId, order, sort } = query;
+      const {
+        limit,
+        offset,
+        name,
+        type,
+        categoryId,
+        order,
+        sort,
+        code,
+        showDetail,
+      } = query;
       const whereOptions: WhereOptions = {};
       if (name) {
         whereOptions['name'] = {
@@ -44,14 +54,24 @@ export class ProductService {
       if (categoryId) {
         whereOptions['categoryId'] = categoryId;
       }
+      if (code) {
+        whereOptions['code'] = code;
+      }
 
+      const include: Includeable[] = [
+        {
+          model: Category,
+          attributes: ['id', 'name'],
+        },
+      ];
+      if (showDetail) {
+        include.push({
+          model: Tkpi,
+          attributes: ['id', 'name', 'symbol', 'value', 'unit'],
+        });
+      }
       const { rows, count } = await this.productModel.findAndCountAll({
-        include: [
-          {
-            model: Category,
-            attributes: ['id', 'name'],
-          },
-        ],
+        include,
         where: whereOptions,
         attributes: {
           exclude: ['createdAt', 'deletedAt', 'updatedAt'],
