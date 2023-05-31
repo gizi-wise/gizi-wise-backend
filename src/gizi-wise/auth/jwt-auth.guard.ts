@@ -37,9 +37,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') implements CanActivate {
       requiredRoles.add(Role.ADMIN);
     }
     if (user.role === 'user') {
-      await this.userService.findOne(user.id);
+      const userVerified = await this.userService.findOne(user.id);
+      context.switchToHttp().getRequest().user = userVerified;
     } else {
-      await this.adminService.findOne(user.id, false);
+      const adminVerified = await this.adminService.findOne(user.id, false);
+      context.switchToHttp().getRequest().user = adminVerified;
     }
     return requiredRoles.has(user.role);
   }
