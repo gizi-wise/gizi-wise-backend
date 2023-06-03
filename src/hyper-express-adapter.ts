@@ -28,6 +28,8 @@ import { AbstractHttpAdapter } from '@nestjs/core/adapters/http-adapter';
 import { RouterMethodFactory } from '@nestjs/core/helpers/router-method-factory';
 import { parse } from 'content-type';
 import {
+  MultipartField,
+  MultipartFile,
   Request,
   Response,
   Server,
@@ -42,6 +44,14 @@ type VersionedRoute = <
   res: TResponse,
   next: () => void,
 ) => any;
+
+type MultipartFileBuffer = {
+  buffer: Buffer;
+} & MultipartFile;
+
+export interface MultipartFieldBuffer extends MultipartField {
+  file: MultipartFileBuffer | void;
+}
 
 export class HyperExpressAdapter extends AbstractHttpAdapter<
   Server,
@@ -214,26 +224,43 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
 
   public initHttpServer(options: NestApplicationOptions) {}
 
+  async streamToBuffer(stream: NodeJS.ReadableStream) {
+    const chunks = [];
+    for await (const chunk of stream) {
+      chunks.push(Buffer.from(chunk));
+    }
+    return Buffer.concat(chunks);
+  }
+
   public registerParserMiddleware() {
-    this.instance.use(async (req, res, next) => {
-      const coontentType = req.header('Content-Type');
-      if (!coontentType) return;
-      const type = parse(coontentType);
-      if (type.type === 'application/json') {
-        req.body = await req.json({});
-        return;
-      }
-      if (type.type === 'text/plain') {
-        req.body = await req.text();
-        return;
-      }
-      if (type.type === 'application/x-www-form-urlencoded') {
-        req.body = await req.urlencoded();
-        return;
-      }
-      if (type.type === 'application/octet-stream') {
-        req.body = await req.buffer();
-        return;
+    this.instance.use(async (req: Request, res, next) => {
+      const contentType = req.header('Content-Type');
+      if (!contentType) return;
+      const type = parse(contentType);
+      const bodyParsers = {
+        'application/json': req.json,
+        'text/plain': req.text,
+        'application/x-www-form-urlencoded': req.urlencoded,
+        'application/octet-stream': req.buffer,
+        'multipart/form-data': async () => {
+          const results: MultipartFieldBuffer[] = [];
+          await req.multipart(async (field: MultipartFieldBuffer) => {
+            if (field.name) {
+              if (field.file) {
+                field.file.buffer = await this.streamToBuffer(
+                  field.file.stream,
+                );
+              }
+              results.push(field);
+            }
+          });
+          return results;
+        },
+      };
+
+      const bodyParser = bodyParsers[type.type];
+      if (bodyParser) {
+        req.body = await bodyParser();
       }
     });
   }
