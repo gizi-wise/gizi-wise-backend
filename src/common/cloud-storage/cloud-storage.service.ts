@@ -43,9 +43,9 @@ export class CloudStorageService {
         .delete({ ignoreNotFound: true });
       if ((response as any).error) {
         this.logger.error((response as any).error.message);
-        return (response as any).error.message;
+        return false;
       }
-      return 'success delete file';
+      return true;
     } catch (error) {
       this.logger.error(error.message, error.stack);
     }
