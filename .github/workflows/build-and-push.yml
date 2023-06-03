@@ -47,6 +47,8 @@ jobs:
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           JWT_EXPIRATION_TIME: ${{ secrets.JWT_EXPIRATION_TIME }}
           FIREBASE_CONFIG: '${{ secrets.FIREBASE_CONFIG }}'
+          CLOUD_STORAGE_CONFIG: '${{ secrets.CLOUD_STORAGE_CONFIG }}'
+          CLOUD_STORAGE_BUCKET: ${{ secrets.CLOUD_STORAGE_BUCKET }}
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.1.1
         with:
@@ -77,6 +79,8 @@ jobs:
           --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
           --build-arg JWT_EXPIRATION_TIME=${{ secrets.JWT_EXPIRATION_TIME }} \
           --build-arg FIREBASE_CONFIG='${{ secrets.FIREBASE_CONFIG }}' \
+          --build-arg CLOUD_STORAGE_CONFIG='${{ secrets.CLOUD_STORAGE_CONFIG }}' \
+          --build-arg CLOUD_STORAGE_BUCKET=${{ secrets.CLOUD_STORAGE_BUCKET }} \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-

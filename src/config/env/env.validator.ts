@@ -41,6 +41,12 @@ class EnvironmentVariables {
 
   @IsString()
   FIREBASE_CONFIG: string;
+
+  @IsString()
+  CLOUD_STORAGE_CONFIG: string;
+
+  @IsString()
+  CLOUD_STORAGE_BUCKET: string;
 }
 
 export function validate(config: Record<string, unknown>) {
