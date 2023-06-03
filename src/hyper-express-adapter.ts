@@ -238,7 +238,7 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
       if (!contentType) return;
       const type = parse(contentType);
       const bodyParsers = {
-        'application/json': req.json,
+        'application/json': () => req.json({}),
         'text/plain': req.text,
         'application/x-www-form-urlencoded': req.urlencoded,
         'application/octet-stream': req.buffer,
@@ -262,6 +262,7 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
       if (bodyParser) {
         req.body = await bodyParser();
       }
+      return;
     });
   }
 
