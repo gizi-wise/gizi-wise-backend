@@ -243,7 +243,7 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
         'application/x-www-form-urlencoded': req.urlencoded,
         'application/octet-stream': req.buffer,
         'multipart/form-data': async () => {
-          const results: MultipartFieldBuffer[] = [];
+          const results: any = {};
           await req.multipart(async (field: MultipartFieldBuffer) => {
             if (field.name) {
               if (field.file) {
@@ -251,7 +251,7 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
                   field.file.stream,
                 );
               }
-              results.push(field);
+              results[field.name] = field;
             }
           });
           return results;
