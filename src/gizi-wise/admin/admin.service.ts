@@ -130,7 +130,6 @@ export class AdminService {
 
   async findOne(id: string, withPassword = false) {
     try {
-      console.log(id);
       const admin = await this.adminModel.findOne({ where: { id } });
       if (!admin) {
         throw new NotFoundException(this.errorMessages.notFound);
