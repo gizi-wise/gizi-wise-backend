@@ -8,6 +8,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { getDatabaseConfig } from '@config/database/db.config';
 import { GiziWiseModule } from '@gizi-wise/gizi-wise.module';
 import { CommonModule } from './common/common.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { CommonModule } from './common/common.module';
     SequelizeModule.forRootAsync({
       useFactory: getDatabaseConfig,
     }),
+    EventEmitterModule.forRoot(),
     GiziWiseModule,
     CommonModule,
   ],
