@@ -6,6 +6,7 @@ import { ProductModule } from './product/product.module';
 import { TkpiModule } from './tkpi/tkpi.module';
 import { UserModule } from './user/user.module';
 import { FileUploadLogsModule } from './file-upload-logs/file-upload-logs.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { FileUploadLogsModule } from './file-upload-logs/file-upload-logs.module
     AdminModule,
     UserModule,
     CategoryModule,
+    TagsModule,
     ProductModule,
     TkpiModule,
     FileUploadLogsModule,
