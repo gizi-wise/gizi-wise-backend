@@ -1,3 +1,4 @@
+import { CloudStorageService } from '@common/cloud-storage/cloud-storage.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, WhereOptions } from 'sequelize';
@@ -14,7 +15,8 @@ export class UserService {
   };
   constructor(
     @InjectModel(User)
-    private userModel: typeof User,
+    private readonly userModel: typeof User,
+    private readonly cloudStorageService: CloudStorageService,
   ) {}
 
   async findOrCreate(createUserDto: CreateUserDto) {
@@ -78,6 +80,8 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
+      const { image } = updateUserDto;
+      const user = await this.findOne(id);
       const [affectedCount] = await this.userModel.update(updateUserDto, {
         where: {
           id,
@@ -85,6 +89,9 @@ export class UserService {
       });
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
+      }
+      if (user.image && user.image !== image) {
+        await this.cloudStorageService.deleteFile(user.image);
       }
       return this.findOne(id);
     } catch (error) {
