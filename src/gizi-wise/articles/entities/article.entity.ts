@@ -35,6 +35,9 @@ export class Article extends Model {
   content: string;
 
   @Column
+  isFeatured: boolean;
+
+  @Column
   @ForeignKey(() => Admin)
   authorId: string;
 

@@ -4,7 +4,7 @@ import {
   ApiProperty,
   ApiPropertyOptional,
 } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class CreateArticleDto {
   @ApiProperty({
@@ -26,6 +26,13 @@ export class CreateArticleDto {
   @IsOptionalWithEmptyString()
   @IsString()
   image?: string;
+
+  @ApiPropertyOptional({
+    type: 'boolean',
+  })
+  @IsOptionalWithEmptyString()
+  @IsBoolean()
+  isFeatured?: boolean;
 
   @ApiProperty({
     type: 'string',

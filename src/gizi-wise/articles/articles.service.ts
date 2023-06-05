@@ -57,7 +57,16 @@ export class ArticlesService {
   }
 
   async findAll(query: QueryListArticleDto) {
-    const { limit, offset, title, order, sort, articleTags, authorId } = query;
+    const {
+      limit,
+      offset,
+      title,
+      order,
+      sort,
+      articleTags,
+      authorId,
+      isFeatured,
+    } = query;
     try {
       const whereOptions: WhereOptions = {};
       if (title) {
@@ -67,6 +76,9 @@ export class ArticlesService {
       }
       if (authorId) {
         whereOptions['authorId'] = authorId;
+      }
+      if (typeof isFeatured === 'boolean') {
+        whereOptions['isFeatured'] = isFeatured;
       }
       const include: Includeable[] = [
         {

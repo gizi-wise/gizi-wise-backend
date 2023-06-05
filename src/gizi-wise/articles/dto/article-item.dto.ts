@@ -2,7 +2,14 @@ import { validateAndTransformData } from '@common/functions/validateAndTransform
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { Admin } from '@gizi-wise/admin/entities/admin.entity';
 import { Type } from 'class-transformer';
-import { Allow, IsArray, IsDate, IsNumber, IsString } from 'class-validator';
+import {
+  Allow,
+  IsArray,
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { Article } from '../entities/article.entity';
 import { ArticleTagDto } from './article-tag.dto';
 
@@ -20,6 +27,10 @@ export class ArticleItemDto {
   @IsOptionalWithEmptyString()
   @IsString()
   image?: string;
+
+  @IsOptionalWithEmptyString()
+  @IsBoolean()
+  isFeatured?: boolean;
 
   @IsString()
   authorId: string;
