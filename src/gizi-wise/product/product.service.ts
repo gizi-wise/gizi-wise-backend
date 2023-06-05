@@ -1,3 +1,4 @@
+import { CloudStorageService } from '@common/cloud-storage/cloud-storage.service';
 import { Category } from '@gizi-wise/category/entities/category.entity';
 import { Tkpi } from '@gizi-wise/tkpi/entities/tkpi.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -17,6 +18,7 @@ export class ProductService {
   constructor(
     @InjectModel(Product)
     private readonly productModel: typeof Product,
+    private readonly cloudServiceStorage: CloudStorageService,
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
@@ -119,6 +121,8 @@ export class ProductService {
 
   async update(id: number, updateProductDto: UpdateProductDto) {
     try {
+      const { image } = updateProductDto;
+      const product = await this.findOne(id);
       const [affectedCount] = await this.productModel.update(updateProductDto, {
         where: {
           id,
@@ -126,6 +130,9 @@ export class ProductService {
       });
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
+      }
+      if (product.image && product.image !== image) {
+        await this.cloudServiceStorage.deleteFile(product.image);
       }
       return await this.findOne(id);
     } catch (error) {
