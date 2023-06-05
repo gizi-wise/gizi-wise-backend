@@ -1,4 +1,7 @@
+import { CloudStorageService } from '@common/cloud-storage/cloud-storage.service';
 import { LoggedUser } from '@common/decorators/logged-user.decorator';
+import { RawBody } from '@common/decorators/raw-body.decorator';
+import { validateMultipartFormFile } from '@common/functions/validate-multipart-form-file';
 import {
   Controller,
   Get,
@@ -10,7 +13,7 @@ import {
   Query,
   ForbiddenException,
 } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Auth } from '../auth/auth.decorator';
 import { AdminService } from './admin.service';
 import { AdminDto } from './dto/admin.dto';
@@ -19,12 +22,56 @@ import { ResponseListAdminDto } from './dto/list-admin.dto';
 import { QueryListAdminDto } from './dto/query-list-admin.dto';
 import { ReviveAdminDto } from './dto/revive-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { UploadImageAdminDto } from './dto/upload-image-user.dto';
 import { Role } from './entities/admin.entity';
 
 @ApiTags('Admins')
 @Controller('admins')
 export class AdminController {
-  constructor(private readonly adminService: AdminService) {}
+  constructor(
+    private readonly adminService: AdminService,
+    private readonly cloudStorageService: CloudStorageService,
+  ) {}
+
+  @Post('/upload-image')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload image',
+    type: UploadImageAdminDto,
+  })
+  @Auth(Role.ADMIN)
+  async uploadImage(
+    @LoggedUser() user: any,
+    @RawBody()
+    body: UploadImageAdminDto,
+  ) {
+    const result = {
+      field: '',
+      url: '',
+    };
+    const { image } = body;
+    validateMultipartFormFile(image, {
+      allowedExtension: 'image',
+      allowedMimeType: 'image',
+    });
+    if (image.file) {
+      if (image.mime_type.split('/')[0] === 'image') {
+        const url = await this.cloudStorageService.uploadFile({
+          destination: `images/users/${Date.now()}-${image.file.name}`,
+          contentType: image.mime_type,
+          file: image.file.buffer,
+          moduleName: 'users',
+          uploader: {
+            id: user.id,
+            role: user.role,
+          },
+        });
+        result.field = image.name;
+        result.url = url;
+      }
+    }
+    return result;
+  }
 
   @Post()
   @Auth()
