@@ -10,6 +10,7 @@ export class CloudStorageService {
   private readonly storageApp: Storage;
   private readonly bucketName: string;
   private readonly bucket: Bucket;
+  private readonly baseUrl: string;
   constructor(
     private readonly configService: ConfigService,
     private readonly eventEmitter: EventEmitter2,
@@ -19,12 +20,13 @@ export class CloudStorageService {
     });
     this.bucketName = this.configService.get('CLOUD_STORAGE_BUCKET');
     this.bucket = this.storageApp.bucket(this.bucketName);
+    this.baseUrl = `https://storage.googleapis.com/${this.bucketName}`;
     this.logger.log('Cloud Storage App has initialized');
   }
 
   async uploadFile(data: CreateFileParams) {
     try {
-      const url = `https://storage.googleapis.com/${this.bucketName}/${data.destination}`;
+      const url = `${this.baseUrl}/${data.destination}`;
       await this.bucket.file(data.destination).save(data.file, {
         public: true,
         validation: false,
@@ -51,16 +53,19 @@ export class CloudStorageService {
     }
   }
 
-  async deleteFile(destination: string) {
+  async deleteFile(url: string) {
     try {
+      if (!url.includes(this.baseUrl)) {
+        return false;
+      }
       const [response] = await this.bucket
-        .file(destination)
+        .file(url.replace(`${this.baseUrl}/`, ''))
         .delete({ ignoreNotFound: true });
       if ((response as any).error) {
         this.logger.error((response as any).error.message);
         return false;
       }
-      this.eventEmitter.emit('file.deleted', { url: destination });
+      this.eventEmitter.emit('file.deleted', { url });
       return true;
     } catch (error) {
       this.logger.error(error.message, error.stack);
