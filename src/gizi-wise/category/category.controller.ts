@@ -10,7 +10,7 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ResponseListCategoryDto } from './dto/list-category.dto';
@@ -23,12 +23,18 @@ export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Post()
+  @ApiOperation({
+    description: 'Create a category, category is only for articles and recipes',
+  })
   @Auth(Role.ADMIN)
   create(@Body() createCategoryDto: CreateCategoryDto) {
     return this.categoryService.create(createCategoryDto);
   }
 
   @Get()
+  @ApiOperation({
+    description: 'Retrieve list of categories, category is only for products',
+  })
   async findAll(
     @Query() query: QueryListCategoryDto,
   ): Promise<ResponseListCategoryDto> {

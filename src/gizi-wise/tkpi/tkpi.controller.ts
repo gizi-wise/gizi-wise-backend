@@ -11,7 +11,7 @@ import {
 import { TkpiService } from './tkpi.service';
 import { CreateTkpiDto } from './dto/create-tkpi.dto';
 import { UpdateTkpiDto } from './dto/update-tkpi.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { QueryListTkpiDto } from './dto/query-list-tkpi.dto';
 import { Auth } from '@gizi-wise/auth/auth.decorator';
 import { Role } from '@gizi-wise/admin/entities/admin.entity';
@@ -23,12 +23,19 @@ export class TkpiController {
   constructor(private readonly tkpiService: TkpiService) {}
 
   @Post()
+  @ApiOperation({
+    description: 'Create a TKPI, TKPI is Tabel Komposisi Pangan Indonesia',
+  })
   @Auth(Role.ADMIN)
   create(@Body() createTkpiDto: CreateTkpiDto) {
     return this.tkpiService.create(createTkpiDto);
   }
 
   @Get()
+  @ApiOperation({
+    description:
+      'Retrieve list of TKPIs, TKPI is Tabel Komposisi Pangan Indonesia',
+  })
   async findAll(@Query() query: QueryListTkpiDto) {
     const { page, limit } = query;
     query.offset = (page - 1) * limit;
