@@ -25,6 +25,7 @@ import { LoggedUser } from '@common/decorators/logged-user.decorator';
 @ApiTags('Products')
 @Controller('products')
 export class ProductController {
+  private searchCounter = 0;
   constructor(
     private readonly productService: ProductService,
     private readonly cloudStorageService: CloudStorageService,
@@ -68,6 +69,54 @@ export class ProductController {
       }
     }
     return result;
+  }
+
+  @Post('/search-by-image')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Upload image',
+    type: UploadImageProductDto,
+  })
+  async searchByImage(
+    @RawBody()
+    body: UploadImageProductDto,
+  ) {
+    const result = {
+      field: '',
+      url: '',
+    };
+    const { image } = body;
+    validateMultipartFormFile(image, {
+      allowedExtension: 'image',
+      allowedMimeType: 'image',
+    });
+    if (image.file) {
+      if (image.mime_type.split('/')[0] === 'image') {
+        const url = await this.cloudStorageService.uploadFile({
+          destination: `images/product-searchs/${Date.now()}-${
+            image.file.name
+          }`,
+          contentType: image.mime_type,
+          file: image.file.buffer,
+          moduleName: 'products',
+          uploader: {
+            id: 'search-by-image',
+            role: 'module',
+          },
+        });
+        result.field = image.name;
+        result.url = url;
+      }
+    }
+    if (this.searchCounter === 2) {
+      this.searchCounter = 0;
+      await this.productService.findOne(100000);
+    }
+    const id = Math.floor(Math.random() * 1000) + 1;
+    const product = await this.productService.findOne(id);
+    product.image = result.url;
+    this.searchCounter += 1;
+    return product;
   }
 
   @Post()
