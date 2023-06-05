@@ -7,6 +7,7 @@ import { TkpiModule } from './tkpi/tkpi.module';
 import { UserModule } from './user/user.module';
 import { FileUploadLogsModule } from './file-upload-logs/file-upload-logs.module';
 import { TagsModule } from './tags/tags.module';
+import { ArticlesModule } from './articles/articles.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TagsModule } from './tags/tags.module';
     TagsModule,
     ProductModule,
     TkpiModule,
+    ArticlesModule,
     FileUploadLogsModule,
   ],
 })
