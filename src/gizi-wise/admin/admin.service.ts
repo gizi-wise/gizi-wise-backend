@@ -1,3 +1,4 @@
+import { CloudStorageService } from '@common/cloud-storage/cloud-storage.service';
 import { HashService } from '@common/utilities/hash/hash.service';
 import { UuidService } from '@common/utilities/uuid/uuid.service';
 import {
@@ -26,6 +27,7 @@ export class AdminService {
     private readonly adminModel: typeof Admin,
     private readonly uuidService: UuidService,
     private readonly hashService: HashService,
+    private readonly cloudStorageService: CloudStorageService,
   ) {}
 
   private async checkEmailIsUsed(email: string, id?: string) {
@@ -158,8 +160,8 @@ export class AdminService {
 
   async update(id: string, updateAdminDto: UpdateAdminDto) {
     try {
-      await this.findOne(id);
-      const { username, email, password } = updateAdminDto;
+      const user = await this.findOne(id);
+      const { username, email, password, image } = updateAdminDto;
       if (email) {
         await this.checkEmailIsUsed(email, id);
       }
@@ -177,6 +179,9 @@ export class AdminService {
       );
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
+      }
+      if (user.image && user.image !== image) {
+        await this.cloudStorageService.deleteFile(user.image);
       }
       const admin = await this.findOne(id);
       return admin;
