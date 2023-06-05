@@ -57,10 +57,10 @@ export class AdminController {
     if (image.file) {
       if (image.mime_type.split('/')[0] === 'image') {
         const url = await this.cloudStorageService.uploadFile({
-          destination: `images/users/${Date.now()}-${image.file.name}`,
+          destination: `images/admins/${Date.now()}-${image.file.name}`,
           contentType: image.mime_type,
           file: image.file.buffer,
-          moduleName: 'users',
+          moduleName: 'admins',
           uploader: {
             id: user.id,
             role: user.role,
