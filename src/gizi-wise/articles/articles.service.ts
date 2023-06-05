@@ -5,6 +5,7 @@ import { TagsService } from '@gizi-wise/tags/tags.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Includeable, Op, WhereOptions } from 'sequelize';
+import { ArticleItemDto } from './dto/article-item.dto';
 import { ArticleDto } from './dto/article.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { QueryListArticleDto } from './dto/query-list-product.dto';
@@ -28,11 +29,17 @@ export class ArticlesService {
   ) {}
 
   async create(createArticleDto: CreateArticleDto) {
-    const { articleTags } = createArticleDto;
+    const { articleTags, summary } = createArticleDto;
     try {
-      // check if article tags are exist
       for (let i = 0; i < articleTags.length; i++) {
         await this.tagService.findOne(articleTags[i]);
+      }
+      if (!summary) {
+        const summary = createArticleDto.content
+          .replace(/<img[^>]*>/g, '')
+          .replace(/<[^>]+>/g, '')
+          .substring(0, 100);
+        createArticleDto.summary = summary;
       }
       const article = await this.articleModel.create({
         ...createArticleDto,
@@ -90,7 +97,7 @@ export class ArticlesService {
       const { rows, count } = await this.articleModel.findAndCountAll({
         where: whereOptions,
         attributes: {
-          exclude: ['deletedAt'],
+          exclude: ['content', 'deletedAt'],
         },
         include,
         limit,
@@ -99,7 +106,7 @@ export class ArticlesService {
         distinct: true,
       });
       return {
-        articles: rows.map((article) => new ArticleDto(article)),
+        articles: rows.map((article) => new ArticleItemDto(article)),
         count,
       };
     } catch (error) {
@@ -139,6 +146,13 @@ export class ArticlesService {
     try {
       const article = await this.findOne(id);
       const { articleTags, ...payloads } = updateArticleDto;
+      if (!payloads.summary && !article.summary && payloads.content) {
+        const summary = payloads.content
+          .replace(/<img[^>]*>/g, '')
+          .replace(/<[^>]+>/g, '')
+          .substring(0, 100);
+        payloads.summary = summary;
+      }
       const [affectedRows] = await this.articleModel.update(payloads, {
         where: { id },
       });

@@ -2,14 +2,14 @@ import { IsArray, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { PaginationDto } from '@common/dto/pagination.dto';
 import { IntersectionType } from '@nestjs/mapped-types';
-import { ArticleDto } from './article.dto';
 import { validateAndTransformData } from '@common/functions/validateAndTransformData';
+import { ArticleItemDto } from './article-item.dto';
 
 class ListArticle {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => ArticleDto)
-  articles: ArticleDto[];
+  @Type(() => ArticleItemDto)
+  articles: ArticleItemDto[];
 }
 
 export class ResponseListArticleDto extends IntersectionType(
