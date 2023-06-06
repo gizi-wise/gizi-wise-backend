@@ -5,7 +5,7 @@ export class QueryListDto {
   @ApiProperty({
     type: 'string',
     description:
-      'sort by any property name, such as <code>id</code>, <code>name</code>, etc, or <code>createdAt</code> (by created time), or <code>updatedAt</code> (by updated time)',
+      'sort by any property name, such as <code>id</code> or any property name, or <code>createdAt</code> (by created time), or <code>updatedAt</code> (by updated time)',
   })
   @IsString()
   sort: string;
