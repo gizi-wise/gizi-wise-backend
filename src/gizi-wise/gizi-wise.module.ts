@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { FileUploadLogsModule } from './file-upload-logs/file-upload-logs.module';
 import { TagsModule } from './tags/tags.module';
 import { ArticlesModule } from './articles/articles.module';
+import { RecipesModule } from './recipes/recipes.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ArticlesModule } from './articles/articles.module';
     TkpiModule,
     TagsModule,
     ArticlesModule,
+    RecipesModule,
     FileUploadLogsModule,
   ],
 })
