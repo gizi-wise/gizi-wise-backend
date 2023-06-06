@@ -104,23 +104,23 @@ Example response:
 
 ```json
 {
-  "statusCode": 200,
+  "statusCode": 201,
   "messages": [],
   "data": {
-    "id": 2,
-    "title": "Bagaimana hidup sehat",
-    "summary": "string",
-    "image": "https://storage.googleapis.com/gizi-wise/images/articles/1685955916363-images--18-_jpg.rf.18ffc84f219e36e935e57529f19e6a31.jpg",
-    "content": "hai",
+    "id": 3,
+    "title": "Manfaat Mengonsumsi Makanan Sehat",
+    "summary": "Apakah yang dimaksud dengan makanan sehat? Makanan sehat diartikan sebagai makanan yang memiliki kom",
+    "image": "https://storage.googleapis.com/gizi-wise/images/articles/1686011888855-Manfaat_Mengonsumsi_Makanan_Sehat.jpg",
+    "content": "<p>Apakah yang dimaksud dengan makanan sehat? Makanan sehat diartikan sebagai makanan yang memiliki kombinasi variasi makanan sehingga mengandung berbagai nutrisi. Makanan sehat yang seimbang yaitu terdiri dari karbohidrat, protein, lemak, vitamin dan mineral. Konsumsi makanan yang sehat mampu menjaga tubuh dari berbagai penyakit tidak menular, seperti penyakit jantung diabetes dan kanker.</p><p>Beberapa jenis pilihan makanan sehat yaitu: sayur-sayuran seperti brokoli, kale, buah-buahan, daging dan telur, kacang-kacangan dan biji-bijian, susu, ikan dan makanan laut lainnya. Diet yang sehat tentunya disertai dengan mengurangi konsumsi garam, gula serta lemak jenuh dan lemak trans yang diproduksi secara industri.</p><p>Berikut beberapa manfaat mengonsumsi makanan sehat yaitu:</p><p>Bagi orang dewasa:</p><ul>\t<li>Membantu Anda panjang umur</li>\t<li>Menjaga kulit, gigi dan mata tetap sehat</li>\t<li>Mendukung otot</li>\t<li>Meningkatkan imunitas tubuh</li>\t<li>Memperkuat tulang</li>\t<li>Menurunkan risiko dari penyakit jantung, diabetes tipe 2 dan kanker</li>\t<li>Membantu kehamilan dan menyusui</li>\t<li>Membantu mempertahankan berat badan yang sehat</li></ul><p><br />Bagi anak-anak:</p><ul>\t<li>Menjaga Kesehatan kulit, gigi dan mata</li>\t<li>Menjaga otot</li>\t<li>Membantu mendapatkan dan menjaga berat badan yang sehat</li>\t<li>Memperkuat tulang</li>\t<li>Mendukung perkembangan otak</li>\t<li>Mendukung pertumbuhan yang sehat</li>\t<li>Meningkatkan kekebalan tubuh</li>\t<li>Membantu fungsi sistem pencernaan</li></ul><p><br />Tubuh memerlukan makanan yang sehat untuk mendukung pertumbuhan dan fungsi kerja organ di tubuh.</p><p>Sumber</p><p>Benefits of Healthy Eating. CDC. 2021<br />Healthy Diet. WHO. 2022<br />Makanan Sehat. Halodoc. 2022</p>",
     "isFeatured": true,
     "authorId": "fea7b1f2-a9dd-41da-9a80-3b61eb8cb07c",
-    "createdAt": "2023-06-05T09:06:22.993Z",
-    "updatedAt": "2023-06-05T22:53:33.020Z",
+    "createdAt": "2023-06-06T00:58:24.913Z",
+    "updatedAt": "2023-06-06T00:58:24.913Z",
     "articleTags": [
       {
-        "tagId": 2,
+        "tagId": 3,
         "tag": {
-          "name": "Rendah Kalori"
+          "name": "Kesehatan"
         }
       }
     ],
