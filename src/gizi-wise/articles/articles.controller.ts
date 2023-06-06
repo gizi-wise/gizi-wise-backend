@@ -18,7 +18,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { ArticlesService } from './articles.service';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { ResponseListArticleDto } from './dto/list-article.dto';
-import { QueryListArticleDto } from './dto/query-list-product.dto';
+import { QueryListArticleDto } from './dto/query-list-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { UploadImageArticleDto } from './dto/upload-image-article.dto';
 

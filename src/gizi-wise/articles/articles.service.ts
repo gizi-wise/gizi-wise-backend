@@ -8,7 +8,7 @@ import { Includeable, Op, WhereOptions } from 'sequelize';
 import { ArticleItemDto } from './dto/article-item.dto';
 import { ArticleDto } from './dto/article.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
-import { QueryListArticleDto } from './dto/query-list-product.dto';
+import { QueryListArticleDto } from './dto/query-list-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { ArticleTag } from './entities/article-tag.entity';
 import { Article } from './entities/article.entity';
