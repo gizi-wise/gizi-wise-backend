@@ -5,6 +5,7 @@ export const mimeTypeList = {
     'image/webp',
     'image/gif',
     'image/svg+xml',
+    'image/*',
   ]),
   video: new Set(['video/mp4', 'video/webm', 'video/ogg']),
   audio: new Set(['audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/webm']),
