@@ -38,9 +38,9 @@ export class TagsController {
   async findAll(@Query() query: QueryListTagDto): Promise<ResponseListTagDto> {
     const { page, limit } = query;
     query.offset = (page - 1) * limit;
-    const { categories, count } = await this.tagsService.findAll(query);
+    const { tags, count } = await this.tagsService.findAll(query);
     return new ResponseListTagDto({
-      categories,
+      tags,
       page,
       limit,
       totalData: count,

@@ -9,7 +9,7 @@ class ListTag {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => TagDto)
-  categories: TagDto[];
+  tags: TagDto[];
 }
 
 export class ResponseListTagDto extends IntersectionType(

@@ -47,7 +47,7 @@ export class TagsService {
         distinct: true,
       });
       return {
-        categories: rows.map((tag) => new TagDto(tag)),
+        tags: rows.map((tag) => new TagDto(tag)),
         count,
       };
     } catch (error) {
