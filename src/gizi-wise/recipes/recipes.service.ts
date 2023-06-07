@@ -188,7 +188,7 @@ export class RecipesService {
           });
         }
       }
-      if (recipe.image && recipe.image !== payloads.image) {
+      if (recipe.image && payloads.image && recipe.image !== payloads.image) {
         await this.cloudStorageService.deleteFile(recipe.image);
       }
       return this.findOne(id);

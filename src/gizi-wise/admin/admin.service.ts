@@ -180,7 +180,7 @@ export class AdminService {
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
       }
-      if (user.image && user.image !== image) {
+      if (user.image && image && user.image !== image) {
         await this.cloudStorageService.deleteFile(user.image);
       }
       const admin = await this.findOne(id);
@@ -192,10 +192,13 @@ export class AdminService {
 
   async remove(id: string) {
     try {
-      await this.findOne(id);
+      const user = await this.findOne(id);
       const affectedCount = await this.adminModel.destroy({ where: { id } });
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
+      }
+      if (user.image) {
+        await this.cloudStorageService.deleteFile(user.image);
       }
       return { affectedCount };
     } catch (error) {

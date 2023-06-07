@@ -202,7 +202,7 @@ export class ArticlesService {
           });
         }
       }
-      if (article.image && article.image !== payloads.image) {
+      if (article.image && payloads.image && article.image !== payloads.image) {
         await this.cloudStorageService.deleteFile(article.image);
       }
       return this.findOne(id);

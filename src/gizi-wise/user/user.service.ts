@@ -90,7 +90,7 @@ export class UserService {
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
       }
-      if (user.image && user.image !== image) {
+      if (user.image && image && user.image !== image) {
         await this.cloudStorageService.deleteFile(user.image);
       }
       return this.findOne(id);
@@ -101,6 +101,7 @@ export class UserService {
 
   async remove(id: string) {
     try {
+      const user = await this.findOne(id);
       const affectedCount = await this.userModel.destroy({
         where: {
           id,
@@ -109,6 +110,9 @@ export class UserService {
       });
       if (affectedCount === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
+      }
+      if (user.image) {
+        await this.cloudStorageService.deleteFile(user.image);
       }
       return 'User deleted';
     } catch (error) {
