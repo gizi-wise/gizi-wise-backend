@@ -1,0 +1,8 @@
+# Ignore generated files
+*.pyc
+*.pyo
+*.db
+*.log
+
+# Ignore virtual environment
+.venv

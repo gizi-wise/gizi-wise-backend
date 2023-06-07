@@ -1,0 +1,12 @@
+# Ignore generated files
+*.pyc
+*.pyo
+*.db
+*.log
+
+# Ignore virtual environment
+.venv
+
+# Ignore Docker-related files
+.dockerignore
+Dockerfile
