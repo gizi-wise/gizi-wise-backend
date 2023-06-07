@@ -27,6 +27,10 @@ export class CloudStorageService {
   async uploadFile(data: CreateFileParams) {
     try {
       const url = `${this.baseUrl}/${data.destination}`;
+      const extension = data.destination.split('.').pop();
+      if (data.contentType.includes('image/*')) {
+        data.contentType = `image/${extension === 'jpg' ? 'jpeg' : extension}`;
+      }
       await this.bucket.file(data.destination).save(data.file, {
         public: true,
         validation: false,
@@ -44,7 +48,7 @@ export class CloudStorageService {
         ownerRole: data.uploader.role,
         url,
         contentType: data.contentType,
-        extension: data.destination.split('.').pop(),
+        extension,
       };
       this.eventEmitter.emit('file.uploaded', fileUploadDto);
       return url;
