@@ -53,9 +53,12 @@ export class FileUploadLogsService {
       }
       if (contentType) {
         const getSetOfContentType: Set<string> = mimeTypeList[contentType];
-        whereOptions['contentType'] = {
-          [Op.in]: [...getSetOfContentType],
-        };
+        whereOptions['contentType'] =
+          getSetOfContentType.size > 0
+            ? {
+                [Op.in]: [...getSetOfContentType],
+              }
+            : contentType;
       }
       if (extension) {
         whereOptions['extension'] = extension;
