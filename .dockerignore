@@ -3,6 +3,7 @@
 *.pyo
 *.db
 *.log
+__pycache__
 
 # Ignore virtual environment
 .venv
@@ -11,3 +12,4 @@
 # Ignore Docker-related files
 .dockerignore
 Dockerfile
+readme.md
