@@ -67,7 +67,7 @@ class UrlImage(BaseModel):
 
 @app.post("/")
 async def upload(urlImage: UrlImage):
-    downloadImage = requests.get("https://storage.googleapis.com/gizi-wise/images/products/1686255010992-pisang.png")
+    downloadImage = requests.get(urlImage.url)
     imageContent = io.BytesIO(downloadImage.content)
     result = output(imageContent)
 
