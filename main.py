@@ -5,7 +5,8 @@ from PIL import Image
 import tensorflow as tf
 import collections
 from tensorflow.keras.preprocessing import image
-
+from pydantic import BaseModel
+import requests
 
 def create_dict():
     code_dict = collections.defaultdict(list)
@@ -61,12 +62,13 @@ def output(location):
 
 app = FastAPI()
 
+class UrlImage(BaseModel):
+    url: str
 
 @app.post("/")
-async def upload(file: UploadFile = File(...)):
-    # Get the image data from the file
-    image_data = file.file.read()
-
-    result = output(io.BytesIO(image_data))
+async def upload(urlImage: UrlImage):
+    downloadImage = requests.get("https://storage.googleapis.com/gizi-wise/images/products/1686255010992-pisang.png")
+    imageContent = io.BytesIO(downloadImage.content)
+    result = output(imageContent)
 
     return {"results": result}
