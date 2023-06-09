@@ -239,9 +239,9 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
       const type = parse(contentType);
       const bodyParsers = {
         'application/json': () => req.json({}),
-        'text/plain': req.text,
-        'application/x-www-form-urlencoded': req.urlencoded,
-        'application/octet-stream': req.buffer,
+        'text/plain': () => req.text,
+        'application/x-www-form-urlencoded': () => req.urlencoded,
+        'application/octet-stream': () => req.buffer,
         'multipart/form-data': async () => {
           const results: any = {};
           await req.multipart(async (field: MultipartFieldBuffer) => {
