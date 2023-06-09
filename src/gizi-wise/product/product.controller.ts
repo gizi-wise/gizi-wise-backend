@@ -21,6 +21,10 @@ import { UploadImageProductDto } from './dto/upload-image-product.dto';
 import { RawBody } from '@common/decorators/raw-body.decorator';
 import { validateMultipartFormFile } from '@common/functions/validate-multipart-form-file';
 import { LoggedUser } from '@common/decorators/logged-user.decorator';
+import {
+  AcceptContentType,
+  ContentTypes,
+} from '@core/decorators/accept-content-type.decorator';
 
 @ApiTags('Products')
 @Controller('products')
@@ -72,6 +76,7 @@ export class ProductController {
   }
 
   @Post('/search-by-image')
+  @AcceptContentType(ContentTypes.FORM_DATA)
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Upload image',

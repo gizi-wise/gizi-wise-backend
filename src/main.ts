@@ -11,6 +11,7 @@ import { HyperExpressAdapter } from './hyper-express-adapter';
 import * as cors from 'cors';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { contentTypeMiddleware } from '@core/middlewares/content-type.middleware';
 
 async function bootstrap() {
   const now = Date.now();
@@ -33,6 +34,7 @@ async function bootstrap() {
   if (nodeEnv === 'production') {
     app.use(helmet());
   }
+  app.use(contentTypeMiddleware);
   const config = new DocumentBuilder()
     .setTitle('Gizi Wise API')
     .setDescription('Gizi Wise API Documentation')

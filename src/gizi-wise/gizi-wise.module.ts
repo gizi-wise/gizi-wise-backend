@@ -9,6 +9,8 @@ import { FileUploadLogsModule } from './file-upload-logs/file-upload-logs.module
 import { TagsModule } from './tags/tags.module';
 import { ArticlesModule } from './articles/articles.module';
 import { RecipesModule } from './recipes/recipes.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ContentTypeGuard } from '@core/guards/content-type.guard';
 
 @Module({
   imports: [
@@ -22,6 +24,12 @@ import { RecipesModule } from './recipes/recipes.module';
     ArticlesModule,
     RecipesModule,
     FileUploadLogsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ContentTypeGuard,
+    },
   ],
 })
 export class GiziWiseModule {}
