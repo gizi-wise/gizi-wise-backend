@@ -8,42 +8,36 @@ from tensorflow.keras.preprocessing import image
 from pydantic import BaseModel
 import requests
 
+
 def create_dict():
     code_dict = collections.defaultdict(list)
     for key, value in [
-        (0, "BR013"),
-        (1, "BR030"),
-        (2, "CR008"),
-        (3, "CR018"),
-        (4, "DR007"),
-        (5, "DR008"),
-        (6, "DR010"),
-        (7, "DR042"),
-        (8, "DR044"),
-        (9, "DR085"),
-        (10, "DR109"),
-        (11, "DR126"),
-        (12, "DR145"),
-        (13, "DR154"),
-        (14, "DR161"),
-        (15, "DR166"),
-        (16, "ER002"),
-        (17, "ER004"),
-        (18, "ER039"),
-        (19, "ER052"),
-        (20, "ER054"),
-        (21, "ER070"),
-        (22, "ER074"),
-        (23, "ER105"),
-        (24, "NR008"),
-        (25, "NR015"),
-        (26, "NR018"),
+        (0, "AP115"),
+        (1, "AP116"),
+        (2, "AP117"),
+        (3, "AP118"),
+        (4, "AP119"),
+        (5, "AP120"),
+        (6, "BP077"),
+        (7, "CP062"),
+        (8, "CP083"),
+        (9, "DP030"),
+        (10, "DP031"),
+        (11, "EP016"),
+        (12, "FP036"),
+        (13, "FP062"),
+        (14, "FP089"),
+        (15, "FP090"),
+        (16, "FP091"),
+        (17, "FP092"),
+        (18, "FP093"),
+        (19, "GP083"),
     ]:
         code_dict[key].append(value)
     return code_dict
 
 
-model = tf.keras.models.load_model("model.h5")
+model = tf.keras.models.load_model("model_dense.h5")
 labels = create_dict()
 
 
@@ -62,8 +56,10 @@ def output(location):
 
 app = FastAPI()
 
+
 class UrlImage(BaseModel):
     url: str
+
 
 @app.post("/")
 async def upload(urlImage: UrlImage):

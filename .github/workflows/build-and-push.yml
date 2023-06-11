@@ -1,0 +1,59 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - image_prediction
+
+env:
+  IMAGE_TAG: ${{ github.sha }}
+  GAR_LOCATION: asia-southeast1
+  IMAGE: image_prediction
+
+jobs:
+  pre_job:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+
+  build-and-push:
+    needs: pre_job
+    if: needs.pre_job.outputs.should_skip != 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1.1.1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_AUTH }}
+      - name: Set up gcloud Cloud SDK environment
+        uses: google-github-actions/setup-gcloud@v1.1.1
+        with:
+          version: '>= 363.0.0'
+          project_id: ${{ secrets.PROJECT_ID }}
+      - name: Install gcloud beta
+        run: gcloud components install beta --quiet
+      - name: Update gcloud components
+        run: gcloud components update
+      - name: Configure Docker
+        run: |-
+          gcloud auth configure-docker "$GAR_LOCATION-docker.pkg.dev" --quiet
+      - name: 'Docker build'
+        run: |-
+          docker build \
+          --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
+      - name: 'Docker tag'
+        run: |-
+          docker tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
+      - name: Push Docker image to Google Cloud
+        run: |
+          docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA"
+          docker push "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:latest"
+      - name: Replace all vms in instance group
+        run: |
+          gcloud beta compute instance-groups managed rolling-action replace ${{ secrets.IMAGE_NAME }}-prod --project=${{ secrets.IMAGE_NAME }} --max-surge=1 --max-unavailable=0 --min-ready=600 --replacement-method='substitute' --zone=asia-southeast1-b --quiet
