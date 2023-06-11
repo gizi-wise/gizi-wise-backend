@@ -1,7 +1,15 @@
 import { IsOptionalWithEmptyString } from '@common/validators/is-optional-with-empty-string.validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 import { ProductType } from '../entities/product.entity';
+import { CreateProductTKPIDto } from './create-product-tkpi.dto';
 
 export class CreateProductDto {
   @ApiPropertyOptional({
@@ -83,4 +91,9 @@ export class CreateProductDto {
   @IsOptionalWithEmptyString()
   @IsNumber()
   ediblePortion?: number;
+
+  @IsOptionalWithEmptyString()
+  @IsArray()
+  @Type(() => CreateProductTKPIDto)
+  tkpis?: CreateProductTKPIDto[];
 }

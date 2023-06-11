@@ -25,6 +25,7 @@ import {
   AcceptContentType,
   ContentTypes,
 } from '@core/decorators/accept-content-type.decorator';
+import { TkpiService } from '@gizi-wise/tkpi/tkpi.service';
 
 @ApiTags('Products')
 @Controller('products')
@@ -33,6 +34,7 @@ export class ProductController {
   constructor(
     private readonly productService: ProductService,
     private readonly cloudStorageService: CloudStorageService,
+    private readonly tkpiService: TkpiService,
   ) {}
 
   @Post('/upload-image')
@@ -126,8 +128,16 @@ export class ProductController {
 
   @Post()
   @Auth(Role.ADMIN)
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  async create(@Body() createProductDto: CreateProductDto) {
+    const { tkpis, ...productInfo } = createProductDto;
+    const product = await this.productService.create(productInfo);
+    for (const tkpi of tkpis) {
+      await this.tkpiService.create({
+        ...tkpi,
+        productId: product.id,
+      });
+    }
+    return this.productService.findOne(product.id);
   }
 
   @Get()

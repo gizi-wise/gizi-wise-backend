@@ -22,10 +22,10 @@ export class ProductService {
   ) {}
   async create(createProductDto: CreateProductDto) {
     try {
-      const category = await this.productModel.create({
+      const product = await this.productModel.create({
         ...createProductDto,
       });
-      return new ProductDto(category);
+      return new ProductDto(product);
     } catch (error) {
       throw error;
     }
@@ -146,6 +146,7 @@ export class ProductService {
         where: {
           id,
         },
+        force: true,
       });
       if (deleted === 0) {
         throw new NotFoundException(this.errorMessages.notFound);
