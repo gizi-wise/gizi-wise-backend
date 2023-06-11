@@ -156,4 +156,34 @@ export class ProductService {
       throw error;
     }
   }
+
+  async findOneByCode(code: string) {
+    try {
+      const product = await this.productModel.findOne({
+        where: {
+          code,
+        },
+        include: [
+          {
+            model: Category,
+            attributes: {
+              exclude: ['createdAt', 'deletedAt', 'updatedAt'],
+            },
+          },
+          {
+            model: Tkpi,
+            attributes: {
+              exclude: ['productId', 'createdAt', 'deletedAt', 'updatedAt'],
+            },
+          },
+        ],
+      });
+      if (!product) {
+        throw new NotFoundException(this.errorMessages.notFound);
+      }
+      return new ProductDto(product);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

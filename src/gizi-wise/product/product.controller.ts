@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -26,15 +27,16 @@ import {
   ContentTypes,
 } from '@core/decorators/accept-content-type.decorator';
 import { TkpiService } from '@gizi-wise/tkpi/tkpi.service';
+import { ImagePredictionService } from '@common/image-prediction/image-prediction.service';
 
 @ApiTags('Products')
 @Controller('products')
 export class ProductController {
-  private searchCounter = 0;
   constructor(
     private readonly productService: ProductService,
     private readonly cloudStorageService: CloudStorageService,
     private readonly tkpiService: TkpiService,
+    private readonly imagePredictionService: ImagePredictionService,
   ) {}
 
   @Post('/upload-image')
@@ -89,7 +91,6 @@ export class ProductController {
     body: UploadImageProductDto,
   ) {
     const result = {
-      field: '',
       url: '',
     };
     const { image } = body;
@@ -111,18 +112,15 @@ export class ProductController {
             role: 'module',
           },
         });
-        result.field = image.name;
         result.url = url;
       }
     }
-    if (this.searchCounter === 2) {
-      this.searchCounter = 0;
-      await this.productService.findOne(100000);
+    const code = await this.imagePredictionService.predictImage(result.url);
+    if (!code) {
+      throw new NotFoundException('Prediction result not found');
     }
-    const id = Math.floor(Math.random() * 1000) + 1;
-    const product = await this.productService.findOne(id);
+    const product = await this.productService.findOneByCode(code);
     product.image = result.url;
-    this.searchCounter += 1;
     return product;
   }
 
