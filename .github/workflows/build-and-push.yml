@@ -49,6 +49,7 @@ jobs:
           FIREBASE_CONFIG: '${{ secrets.FIREBASE_CONFIG }}'
           CLOUD_STORAGE_CONFIG: '${{ secrets.CLOUD_STORAGE_CONFIG }}'
           CLOUD_STORAGE_BUCKET: ${{ secrets.CLOUD_STORAGE_BUCKET }}
+          ML_SERVICE_URL: ${{ secrets.ML_SERVICE_URL }}
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1.1.1
         with:
@@ -81,6 +82,7 @@ jobs:
           --build-arg FIREBASE_CONFIG='${{ secrets.FIREBASE_CONFIG }}' \
           --build-arg CLOUD_STORAGE_CONFIG='${{ secrets.CLOUD_STORAGE_CONFIG }}' \
           --build-arg CLOUD_STORAGE_BUCKET=${{ secrets.CLOUD_STORAGE_BUCKET }} \
+          --build-arg ML_SERVICE_URL=${{ secrets.ML_SERVICE_URL }} \
           --tag "$GAR_LOCATION-docker.pkg.dev/${{ secrets.PROJECT_ID }}/${{ secrets.IMAGE_NAME }}/$IMAGE:$GITHUB_SHA" .
       - name: 'Docker tag'
         run: |-

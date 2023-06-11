@@ -47,6 +47,9 @@ class EnvironmentVariables {
 
   @IsString()
   CLOUD_STORAGE_BUCKET: string;
+
+  @IsString()
+  ML_SERVICE_URL: string;
 }
 
 export function validate(config: Record<string, unknown>) {
