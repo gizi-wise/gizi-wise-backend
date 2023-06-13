@@ -158,7 +158,7 @@ export class ArticlesService {
     try {
       const article = await this.findOne(id);
       const { articleTags, ...payloads } = updateArticleDto;
-      if (!payloads.summary && !article.summary && payloads.content) {
+      if (!payloads.summary && payloads.content) {
         const summary = payloads.content
           .replace(/<img[^>]*>/g, '')
           .replace(/<[^>]+>/g, '')
