@@ -112,9 +112,9 @@ Example response:
 }
 ```
 
-### The different between list of recipes and get an recipe
+### The different between list of recipes and get a recipe
 
-The different between list of recipes and get an recipe is that list of recipes doesn't have `ingredients` and `instructions` field, while get an recipe has them.
+The different between list of recipes and get a recipe is that list of recipes doesn't have `ingredients` and `instructions` field, while get an recipe has them.
 
 ### Possible Errors & status codes:
 
