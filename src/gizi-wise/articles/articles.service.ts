@@ -5,7 +5,6 @@ import { TagsService } from '@gizi-wise/tags/tags.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Includeable, Op, WhereOptions } from 'sequelize';
-import { ArticleItemDto } from './dto/article-item.dto';
 import { ArticleDto } from './dto/article.dto';
 import { CreateArticleDto } from './dto/create-article.dto';
 import { QueryListArticleDto } from './dto/query-list-article.dto';
@@ -109,7 +108,7 @@ export class ArticlesService {
       const { rows, count } = await this.articleModel.findAndCountAll({
         where: whereOptions,
         attributes: {
-          exclude: ['content', 'deletedAt'],
+          exclude: ['deletedAt'],
         },
         include,
         limit,
@@ -118,7 +117,7 @@ export class ArticlesService {
         distinct: true,
       });
       return {
-        articles: rows.map((article) => new ArticleItemDto(article)),
+        articles: rows.map((article) => new ArticleDto(article)),
         count,
       };
     } catch (error) {

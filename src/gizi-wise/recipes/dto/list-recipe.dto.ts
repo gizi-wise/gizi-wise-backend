@@ -3,13 +3,13 @@ import { Type } from 'class-transformer';
 import { PaginationDto } from '@common/dto/pagination.dto';
 import { IntersectionType } from '@nestjs/mapped-types';
 import { validateAndTransformData } from '@common/functions/validateAndTransformData';
-import { RecipeItemDto } from './recipe-item.dto';
+import { RecipeDto } from './recipe.dto';
 
 class ListRecipe {
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => RecipeItemDto)
-  recipes: RecipeItemDto[];
+  @Type(() => RecipeDto)
+  recipes: RecipeDto[];
 }
 
 export class ResponseListRecipeDto extends IntersectionType(

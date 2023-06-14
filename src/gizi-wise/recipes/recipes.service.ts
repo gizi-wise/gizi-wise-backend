@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Includeable, Op, WhereOptions } from 'sequelize';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { QueryListRecipeDto } from './dto/query-list-recipe.dto';
-import { RecipeItemDto } from './dto/recipe-item.dto';
 import { RecipeDto } from './dto/recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { RecipeTag } from './entities/recipe-tag.entity';
@@ -102,7 +101,7 @@ export class RecipesService {
       const { rows, count } = await this.recipeModel.findAndCountAll({
         where: whereOptions,
         attributes: {
-          exclude: ['ingredients', 'instructions', 'deletedAt'],
+          exclude: ['deletedAt'],
         },
         include,
         limit,
@@ -111,7 +110,7 @@ export class RecipesService {
         distinct: true,
       });
       return {
-        recipes: rows.map((recipe) => new RecipeItemDto(recipe)),
+        recipes: rows.map((recipe) => new RecipeDto(recipe)),
         count,
       };
     } catch (error) {
