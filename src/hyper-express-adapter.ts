@@ -35,6 +35,8 @@ import {
   Server,
   ServerConstructorOptions,
 } from 'hyper-express';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* tslint:disable-next-line no-var-requires */ const LiveDirectory = require('live-directory');
 
 type VersionedRoute = <
   TRequest extends Record<string, any> = any,
@@ -181,15 +183,19 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
     throw Error('Not implemented');
   }
 
-  public useStaticAssets(
-    path: string,
-    // options: Options & { prefix?: string },
-  ) {
-    // const LiveDirectory = loadPackage(
-    //     'LiveDirectory',
-    //     'HyperExpressAdapter',
-    //     () => require('live-directory'),
-    // );
+  public useStaticAssets(path: string, options: { prefix?: string }) {
+    const liveAssets = new LiveDirectory(path);
+    this.httpServer.get(`${options.prefix}/*`, async (req, res) => {
+      const pathReq = req.path.replace(options.prefix, '');
+      const file = liveAssets.get(pathReq);
+      if (file === undefined) return res.status(404).end();
+      if (file.cached) {
+        return res.send(file.content);
+      } else {
+        const readable = file.stream();
+        return readable.pipe(res);
+      }
+    });
   }
 
   public setBaseViewsDir(path: string | string[]) {
