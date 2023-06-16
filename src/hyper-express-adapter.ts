@@ -35,6 +35,7 @@ import {
   Server,
   ServerConstructorOptions,
 } from 'hyper-express';
+import * as mimeTypes from 'mime-types';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 /* tslint:disable-next-line no-var-requires */ const LiveDirectory = require('live-directory');
 
@@ -189,6 +190,11 @@ export class HyperExpressAdapter extends AbstractHttpAdapter<
       const pathReq = req.path.replace(options.prefix, '');
       const file = liveAssets.get(pathReq);
       if (file === undefined) return res.status(404).end();
+      res.setHeader(
+        'Content-Type',
+        mimeTypes.contentType(pathReq.split('.').pop().toLowerCase()) ||
+          'application/octet-stream',
+      );
       if (file.cached) {
         return res.send(file.content);
       } else {
