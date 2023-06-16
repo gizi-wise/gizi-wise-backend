@@ -12,7 +12,9 @@ $ npm install
 
 Rename `.env.example` to `.env`, modify it to your needs.
 
-Run the app locally using `npm run start:dev`
+Run the app locally using `npm run start:dev`.
+
+PS: to put value of `ML_SERVICE_URL`, you should run the image prediction server from branch image_prediction.
 
 ## Documentation
 
